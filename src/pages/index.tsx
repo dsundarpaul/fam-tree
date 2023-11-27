@@ -24,7 +24,7 @@ export default function Home() {
             variant={"outline"}
             className="border-stone-900 hover:bg-slate-400"
           >
-            <Link href="/add-family">Get Started</Link>
+            <Link href="/parentId">Get Started</Link>
           </Button>
         </div>
       </main>

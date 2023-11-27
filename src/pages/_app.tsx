@@ -10,6 +10,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     // <ClerkProvider {...pageProps}>
     <AppLayout>
+      <script
+        type="module"
+        defer
+        src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/helix.js"
+      ></script>
       <Component {...pageProps} />
     </AppLayout>
     // {/* </ClerkProvider> */}

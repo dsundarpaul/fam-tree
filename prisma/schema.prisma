@@ -18,3 +18,25 @@ model Post {
 
     @@index([name])
 }
+
+// model SpouseTable {
+//     spouseId   String  @id @unique @default(uuid())
+//     spouseName String
+//     spouseDob  String?
+//     // famMembersId String?
+// }
+
+// model FamTable {
+//     famId     String       @id @unique @default(uuid())
+//     parentIds FamMembers[]
+//     // childrenIds FamMembers[]
+// }
+
+model FamMembers {
+    id         String    @id @unique @default(uuid())
+    FMname     String
+    FMdob      DateTime?
+    FMisAlive  Boolean?  @default(true)
+    FMfamId    String?   @default(uuid())
+    FMparentId String?   @default(uuid())
+}
