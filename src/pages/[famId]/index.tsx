@@ -33,7 +33,6 @@ function AddFamily() {
         <FamMemberCard
           memberName={member.FMname}
           data={member}
-          img={null}
           key={member.id}
         />
       ))}
@@ -55,11 +54,7 @@ function AddFamily() {
                 // onClick={() => hanldeOnClickNavigation(child.navigateTo)}
               >
                 {child && (
-                  <FamMemberCard
-                    memberName={child.FMname}
-                    img={null}
-                    data={child}
-                  />
+                  <FamMemberCard memberName={child.FMname} data={child} />
                 )}
               </div>
             );

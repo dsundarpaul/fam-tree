@@ -14,23 +14,17 @@ import {
 } from "../ui/dialog";
 import Image from "next/image";
 import ImgTemp from "../../../public/assets/missing-member-pic.png";
-import {
-  Cross1Icon,
-  Pencil2Icon,
-  ReloadIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
+import { Pencil2Icon, ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { api } from "~/utils/api";
 import { type GetFamMemberType } from "~/types";
 
 type FamMemberCardProps = {
   memberName: string | null;
-  img?: unknown;
   data?: GetFamMemberType;
 };
 
-const FamMemberCard = ({ memberName, img, data }: FamMemberCardProps) => {
+const FamMemberCard = ({ memberName, data }: FamMemberCardProps) => {
   const [isFammemberCardOpen, setIsFamMemberCardOpen] = useState(false);
 
   const ctx = api.useContext();
