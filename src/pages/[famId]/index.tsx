@@ -12,18 +12,18 @@ import { FamMember } from "~/constants/consts";
 function AddFamily() {
   const router = useRouter();
 
-  const parentId =
-    router?.query.parentId === "parentId"
-      ? "AAA"
-      : (router?.query.parentId as string);
+  const famId =
+    router?.query.famId === "famId" ? "AAA" : (router?.query.famId as string);
 
   console.log(router.query);
 
   const { data, isLoading } = api.famMember.getFamById.useQuery(
-    router && router?.query.parentId === "parentId"
+    router && router?.query.famId === "famId"
       ? "AAA"
-      : (router?.query.parentId as string),
+      : (router?.query.famId as string),
   );
+
+  console.log("88888888888888888888888888888888888888888", isLoading);
 
   console.log({ data });
 
@@ -39,11 +39,7 @@ function AddFamily() {
       ))}
 
       {data && data?.parents?.length < 2 && (
-        <AddMemberCard
-          famId={parentId}
-          parentId={parentId}
-          FMType={FamMember.PARENT}
-        />
+        <AddMemberCard famId={famId} FMType={FamMember.PARENT} />
       )}
     </div>
   );
@@ -62,7 +58,7 @@ function AddFamily() {
                   <FamMemberCard
                     memberName={child.FMname}
                     img={null}
-                    data={data}
+                    data={child}
                   />
                 )}
               </div>
@@ -70,11 +66,7 @@ function AddFamily() {
           })}
         </>
       )}
-      <AddMemberCard
-        famId={parentId}
-        parentId={parentId}
-        FMType={FamMember.CHILD}
-      />
+      <AddMemberCard famId={famId} FMType={FamMember.CHILD} />
     </div>
   );
 
@@ -85,7 +77,7 @@ function AddFamily() {
       ) : (
         <>
           {renderParents()}
-          {data?.parents && renderChildren()}
+          {data?.parents && data.parents.length > 0 && renderChildren()}
         </>
       )}
     </div>

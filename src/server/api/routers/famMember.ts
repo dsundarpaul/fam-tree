@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import input from "postcss/lib/input";
 import { db } from "~/server/db";
+import { TRPCError } from "@trpc/server";
 
 export const famMemberRouter = createTRPCRouter({
   getFamByParentId: publicProcedure
@@ -34,7 +35,7 @@ export const famMemberRouter = createTRPCRouter({
   getFamById: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      await new Promise((resolve) => setTimeout(resolve, 10000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       const selectedFam = await ctx.db.famMembers.findMany({
         where: { FMfamId: input },
@@ -59,6 +60,8 @@ export const famMemberRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       console.log(input.FMname);
       let reponse;
 
@@ -88,8 +91,12 @@ export const famMemberRouter = createTRPCRouter({
               FMparentId: input.famId,
             },
           });
+          break;
         default:
-          return "something went wrong!";
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Invalid FMTYpe",
+          });
       }
 
       console.log({ reponse });
@@ -100,6 +107,8 @@ export const famMemberRouter = createTRPCRouter({
   deleteFamMember: publicProcedure
     .input(z.string())
     .mutation(async ({ input }) => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       const user = await db.famMembers.delete({
         where: {
           id: input,

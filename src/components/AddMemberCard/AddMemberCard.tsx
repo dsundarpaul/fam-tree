@@ -1,59 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { type z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { api } from "~/utils/api";
+
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import * as z from "zod";
-import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "../ui/button";
-import AddMemberButton from "../AddMemberButton/AddMemberButton";
-import { api } from "~/utils/api";
-import { type FMTypeKeys } from "~/constants/consts";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Button } from "../ui/button";
 
-const formSchema = z.object({
-  fullName: z.string().min(2).max(50),
-  gender: z.optional(z.enum(["M", "F"])),
-  dob: z.optional(z.string()),
-});
+import AddMemberButton from "../AddMemberButton/AddMemberButton";
 
-interface AddMemberCardPropsType {
-  famId: string;
-  parentId: string;
-  FMType: FMTypeKeys;
-}
+import { useForm } from "react-hook-form";
 
-const AddMemberCard = ({ famId, parentId, FMType }: AddMemberCardPropsType) => {
-  const {
-    mutate: addFamMember,
-    isLoading: isAddFamMemberLoading,
-    isSuccess,
-  } = api.famMember.addFamMember.useMutation();
+import { AddFamMemberformSchema } from "./formSchema";
+import { type AddMemberCardPropsType } from "./types";
+
+const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
+  const [isAddFammemberDialogOpen, setIsAddFamMemberDialogOpen] =
+    useState(false);
+
+  const ctx = api.useContext();
+
+  const { mutate: addFamMember, isLoading: isAddFamMemberLoading } =
+    api.famMember.addFamMember.useMutation({
+      onSuccess: () => {
+        setIsAddFamMemberDialogOpen(false);
+        void ctx.famMember.getFamById.invalidate();
+      },
+    });
 
   // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof AddFamMemberformSchema>>({
+    resolver: zodResolver(AddFamMemberformSchema),
     defaultValues: {
       fullName: "",
       gender: "M",
@@ -62,13 +59,14 @@ const AddMemberCard = ({ famId, parentId, FMType }: AddMemberCardPropsType) => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof AddFamMemberformSchema>) {
     addFamMember({
       FMname: values.fullName,
       FMType: FMType,
       famId: famId,
     });
-    console.log(values);
+
+    setIsAddFamMemberDialogOpen(false);
   }
 
   const renderForm = () => (
@@ -122,33 +120,35 @@ const AddMemberCard = ({ famId, parentId, FMType }: AddMemberCardPropsType) => {
           )}
         />
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <DialogFooter>
+          {/* <DialogCancel>Cancel</DialogCancel> */}
           <Button type="submit" disabled={isAddFamMemberLoading}>
             {isAddFamMemberLoading && (
               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
             )}
             Save
           </Button>
-        </AlertDialogFooter>
+        </DialogFooter>
       </form>
     </Form>
   );
 
   return (
     <>
-      <AlertDialog>
-        <AlertDialogTrigger>
+      <Dialog
+        open={isAddFammemberDialogOpen}
+        onOpenChange={(open) => setIsAddFamMemberDialogOpen(open)}
+      >
+        <DialogTrigger>
           <AddMemberButton callback={() => null} />
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Add Family Member</AlertDialogTitle>
-          </AlertDialogHeader>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Family Member</DialogTitle>
+          </DialogHeader>
           {renderForm()}
-          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-        </AlertDialogContent>
-      </AlertDialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

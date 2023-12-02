@@ -1,41 +1,56 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 import Image from "next/image";
 import ImgTemp from "../../../public/assets/missing-member-pic.png";
-import { Cross1Icon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
+import {
+  Cross1Icon,
+  Pencil2Icon,
+  ReloadIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { api } from "~/utils/api";
+import { type GetFamMemberType } from "~/types";
 
 type FamMemberCardProps = {
   memberName: string | null;
   img?: unknown;
-  data?: unknown;
+  data?: GetFamMemberType;
 };
 
 const FamMemberCard = ({ memberName, img, data }: FamMemberCardProps) => {
-  // const { id } = data;
+  const [isFammemberCardOpen, setIsFamMemberCardOpen] = useState(false);
 
-  const { mutate: deleteFamMember } =
-    api.famMember.deleteFamMember.useMutation();
+  const ctx = api.useContext();
+
+  const { mutate: deleteFamMember, isLoading: isDeleteFamMemberLoading } =
+    api.famMember.deleteFamMember.useMutation({
+      onSuccess: () => {
+        setIsFamMemberCardOpen(false);
+        void ctx.famMember.getFamById.invalidate();
+      },
+    });
 
   const openMemberModal = () => null;
 
   const handleFamMemberDelete = () => {
-    console.log({ data });
-    deleteFamMember("l");
+    if (data !== undefined) {
+      deleteFamMember(data.id);
+    } else {
+      alert("member id undefined");
+    }
   };
 
   const renderMemberCard = () => (
@@ -54,37 +69,45 @@ const FamMemberCard = ({ memberName, img, data }: FamMemberCardProps) => {
   );
 
   const renderMemberCartContent = () => (
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>{memberName}</AlertDialogTitle>
-        <AlertDialogDescription>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>{memberName}</DialogTitle>
+        <DialogDescription>
           This action cannot be undone. This will permanently delete your
           account and remove your data from our servers.
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogAction>
-          <Pencil2Icon />
-          <span className="pl-2">Edit</span>
-        </AlertDialogAction>
-        <Button variant="destructive" onClick={() => handleFamMemberDelete()}>
-          <TrashIcon width={20} height={20} />
-          <span className="pl-1">delete</span>
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <Button disabled={isDeleteFamMemberLoading}>
+          <Pencil2Icon className="mr-2" />
+          Edit
         </Button>
-        <AlertDialogAction>
-          <Cross1Icon />
-          <span className="pl-2">Close</span>
-        </AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
+
+        <Button
+          variant="destructive"
+          disabled={isDeleteFamMemberLoading}
+          onClick={() => handleFamMemberDelete()}
+        >
+          {isDeleteFamMemberLoading ? (
+            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <TrashIcon width={20} height={20} />
+          )}
+          <span className="pl-1">Delete</span>
+        </Button>
+      </DialogFooter>
+    </DialogContent>
   );
 
   return (
     <>
-      <AlertDialog>
-        <AlertDialogTrigger>{renderMemberCard()}</AlertDialogTrigger>
+      <Dialog
+        open={isFammemberCardOpen}
+        onOpenChange={(open) => setIsFamMemberCardOpen(open)}
+      >
+        <DialogTrigger>{renderMemberCard()}</DialogTrigger>
         {renderMemberCartContent()}
-      </AlertDialog>
+      </Dialog>
     </>
   );
 };
