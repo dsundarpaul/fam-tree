@@ -62,10 +62,8 @@ export const famMemberRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      console.log(input.FMname);
       let reponse;
 
-      console.log(input.FMType, "**************");
       switch (input.FMType) {
         case "PARENT":
           reponse = await db.famMembers.create({
@@ -107,7 +105,7 @@ export const famMemberRouter = createTRPCRouter({
   deleteFamMember: publicProcedure
     .input(z.string())
     .mutation(async ({ input }) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
 
       const user = await db.famMembers.delete({
         where: {

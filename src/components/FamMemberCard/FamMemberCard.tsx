@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import {
   Dialog,
@@ -18,13 +18,20 @@ import { Pencil2Icon, ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { api } from "~/utils/api";
 import { type GetFamMemberType } from "~/types";
+import { type FMTypeKeys } from "~/constants/consts";
+import FamNavigationButton from "../famNavigationButton/FamNavigationButton";
 
 type FamMemberCardProps = {
   memberName: string | null;
-  data?: GetFamMemberType;
+  MemberType: FMTypeKeys;
+  data: GetFamMemberType;
 };
 
-const FamMemberCard = ({ memberName, data }: FamMemberCardProps) => {
+const FamMemberCard = ({
+  memberName,
+  data,
+  MemberType,
+}: FamMemberCardProps) => {
   const [isFammemberCardOpen, setIsFamMemberCardOpen] = useState(false);
 
   const ctx = api.useContext();
@@ -32,8 +39,8 @@ const FamMemberCard = ({ memberName, data }: FamMemberCardProps) => {
   const { mutate: deleteFamMember, isLoading: isDeleteFamMemberLoading } =
     api.famMember.deleteFamMember.useMutation({
       onSuccess: () => {
-        setIsFamMemberCardOpen(false);
         void ctx.famMember.getFamById.invalidate();
+        setIsFamMemberCardOpen(false);
       },
     });
 
@@ -94,7 +101,14 @@ const FamMemberCard = ({ memberName, data }: FamMemberCardProps) => {
   );
 
   return (
-    <>
+    <div>
+      {MemberType === "PARENT" && (
+        <FamNavigationButton
+          memberType={MemberType}
+          navigateTo={data?.FMparentId}
+        />
+      )}
+
       <Dialog
         open={isFammemberCardOpen}
         onOpenChange={(open) => setIsFamMemberCardOpen(open)}
@@ -102,7 +116,14 @@ const FamMemberCard = ({ memberName, data }: FamMemberCardProps) => {
         <DialogTrigger>{renderMemberCard()}</DialogTrigger>
         {renderMemberCartContent()}
       </Dialog>
-    </>
+
+      {MemberType === "CHILD" && (
+        <FamNavigationButton
+          memberType={MemberType}
+          navigateTo={data?.FMfamId}
+        />
+      )}
+    </div>
   );
 };
 

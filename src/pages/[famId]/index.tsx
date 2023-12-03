@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import AddMemberCard from "~/components/AddMemberCard/AddMemberCard";
 import FamMemberCard from "~/components/FamMemberCard/FamMemberCard";
 import { LoadingState } from "~/components/loading-state/LoadingState";
-import { type famMemberType } from "~/types";
 import { api } from "~/utils/api";
 import { FamMember } from "~/constants/consts";
 
@@ -33,6 +32,7 @@ function AddFamily() {
         <FamMemberCard
           memberName={member.FMname}
           data={member}
+          MemberType={FamMember.PARENT}
           key={member.id}
         />
       ))}
@@ -54,7 +54,11 @@ function AddFamily() {
                 // onClick={() => hanldeOnClickNavigation(child.navigateTo)}
               >
                 {child && (
-                  <FamMemberCard memberName={child.FMname} data={child} />
+                  <FamMemberCard
+                    memberName={child.FMname}
+                    data={child}
+                    MemberType={FamMember.CHILD}
+                  />
                 )}
               </div>
             );
