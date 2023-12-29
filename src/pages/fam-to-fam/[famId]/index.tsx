@@ -7,6 +7,7 @@ import FamMemberCard from "~/components/FamMemberCard/FamMemberCard";
 import { LoadingState } from "~/components/loading-state/LoadingState";
 import { api } from "~/utils/api";
 import { FamMember } from "~/constants/consts";
+import { Toaster } from "react-hot-toast";
 
 function AddFamily() {
   const router = useRouter();
@@ -22,16 +23,13 @@ function AddFamily() {
       : (router?.query.famId as string),
   );
 
-  console.log("88888888888888888888888888888888888888888", isLoading);
-
   console.log({ data });
 
   const renderParents = () => (
     <div className="flex w-full items-center justify-evenly">
       {data?.parents.map((member) => (
         <FamMemberCard
-          memberName={member.FMname}
-          data={member}
+          MemberData={member}
           MemberType={FamMember.PARENT}
           key={member.id}
         />
@@ -55,8 +53,7 @@ function AddFamily() {
               >
                 {child && (
                   <FamMemberCard
-                    memberName={child.FMname}
-                    data={child}
+                    MemberData={child}
                     MemberType={FamMember.CHILD}
                   />
                 )}
@@ -79,6 +76,8 @@ function AddFamily() {
           {data?.parents && data.parents.length > 0 && renderChildren()}
         </>
       )}
+
+      <Toaster />
     </div>
   );
 }

@@ -17,6 +17,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,7 +25,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 
 import AddMemberButton from "../AddMemberButton/AddMemberButton";
@@ -33,6 +34,12 @@ import { useForm } from "react-hook-form";
 
 import { AddFamMemberformSchema } from "./formSchema";
 import { type AddMemberCardPropsType } from "./types";
+import { Calendar } from "../ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "~/lib/utils";
+import { format } from "date-fns";
+import DateOfBirthPicker from "../ui/date-picker/date-picker";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const [isAddFammemberDialogOpen, setIsAddFamMemberDialogOpen] =
@@ -43,8 +50,12 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const { mutate: addFamMember, isLoading: isAddFamMemberLoading } =
     api.famMember.addFamMember.useMutation({
       onSuccess: () => {
+        toast.success("Added a Fam Member 🎊", { duration: 2000 });
         setIsAddFamMemberDialogOpen(false);
         void ctx.famMember.getFamById.invalidate();
+      },
+      onError: () => {
+        toast.error("Something went Worng");
       },
     });
 
@@ -53,72 +64,169 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     resolver: zodResolver(AddFamMemberformSchema),
     defaultValues: {
       fullName: "",
-      gender: "M",
-      dob: "",
+      isAlive: "D",
+      dob: undefined,
+      petname: "",
+      location: "",
+      profession: "",
     },
   });
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof AddFamMemberformSchema>) {
+    console.log(values, "************");
+
     addFamMember({
       FMname: values.fullName,
       FMType: FMType,
       famId: famId,
+      famDob: values.dob?.toString().substring(0, 15),
+      famPetname: values.petname,
+      famLoc: values.location,
+      famPro: values.profession,
     });
 
     setIsAddFamMemberDialogOpen(false);
   }
 
+  const renderNameField = () => (
+    <FormField
+      control={form.control}
+      name="fullName"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Full Name</FormLabel>
+          <FormControl>
+            <Input placeholder="Name" {...field} />
+          </FormControl>
+
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+
+  const renderIsAliveField = () => (
+    <FormField
+      control={form.control}
+      name="isAlive"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Is Alive ?</FormLabel>
+          <FormControl>
+            <RadioGroup
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              className="flex"
+            >
+              <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormControl>
+                  <RadioGroupItem value="A" id="alive" />
+                </FormControl>
+
+                <FormLabel className="font-normal">Alive</FormLabel>
+              </FormItem>
+
+              <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormControl>
+                  <RadioGroupItem value="D" id="deceased" />
+                </FormControl>
+
+                <FormLabel className="font-normal">Deceased</FormLabel>
+              </FormItem>
+            </RadioGroup>
+          </FormControl>
+
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+
+  const renderDOBField = () => (
+    <FormField
+      control={form.control}
+      name="dob"
+      render={({ field }) => (
+        <FormItem className="flex flex-col">
+          {/* <FormItem className="flex items-center space-x-3 space-y-0"> */}
+
+          <FormLabel>Date of birth</FormLabel>
+          <DateOfBirthPicker getDateCallback={field.onChange} />
+          {/* </FormItem> */}
+
+          <FormDescription>
+            Your date of birth is used to calculate your age.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+
+  const renderPetnameField = () => (
+    <FormField
+      control={form.control}
+      name="petname"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Petname / Nickname</FormLabel>
+          <FormControl>
+            <Input placeholder="Name" {...field} />
+          </FormControl>
+
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+
+  const renderProfessionField = () => (
+    <FormField
+      control={form.control}
+      name="profession"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Profession</FormLabel>
+          <FormControl>
+            <Input placeholder="..." {...field} />
+          </FormControl>
+
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+  const renderLocationField = () => (
+    <FormField
+      control={form.control}
+      name="location"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Know to live in</FormLabel>
+          <FormControl>
+            <Input placeholder="..." {...field} />
+          </FormControl>
+
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+
   const renderForm = () => (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Name" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="gender"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Gender</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="M" id="male" />
-                    </FormControl>
-
-                    <FormLabel className="font-normal">Male</FormLabel>
-                  </FormItem>
-
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="F" id="female" />
-                    </FormControl>
-
-                    <FormLabel className="font-normal">Female</FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex gap-4">
+          {renderNameField()}
+          {renderPetnameField()}
+        </div>
+        <div className="flex gap-4">
+          {renderProfessionField()}
+          {renderLocationField()}
+        </div>
+        {renderDOBField()}
+        {renderIsAliveField()}
 
         <DialogFooter>
           {/* <DialogCancel>Cancel</DialogCancel> */}
@@ -130,6 +238,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
           </Button>
         </DialogFooter>
       </form>
+      <Toaster />
     </Form>
   );
 

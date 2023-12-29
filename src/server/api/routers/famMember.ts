@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import input from "postcss/lib/input";
 import { db } from "~/server/db";
 import { TRPCError } from "@trpc/server";
+import type { FamMembers } from "@prisma/client";
 
 export const famMemberRouter = createTRPCRouter({
   getFamByParentId: publicProcedure
@@ -12,11 +12,19 @@ export const famMemberRouter = createTRPCRouter({
 
       let selectedMemberChildren;
 
-      const selectedMember = await ctx.db.famMembers.findFirst({
-        where: { FMfamId: "" },
-      });
+      const selectedMember: FamMembers | null =
+        await ctx.db.famMembers.findFirst({
+          where: { FMfamId: "" },
+        });
 
       console.log({ selectedMember });
+
+      if (!selectedMember) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Invalid Fam member fam id",
+        });
+      }
 
       if (selectedMember) {
         selectedMemberChildren = await ctx.db.famMembers.findMany({
@@ -25,7 +33,8 @@ export const famMemberRouter = createTRPCRouter({
       }
 
       return {
-        name: selectedMember ? selectedMember.FMname : "",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        name: selectedMember ? selectedMember.FM_name : "",
         id: selectedMember ? selectedMember.id : null,
         spouseName: null,
         children: selectedMemberChildren,
@@ -57,6 +66,10 @@ export const famMemberRouter = createTRPCRouter({
         FMname: z.string(),
         FMType: z.enum(["PARENT", "SPOUSE", "CHILD"]),
         famId: z.string().optional(),
+        famDob: z.string().optional(),
+        famPetname: z.string().optional(),
+        famLoc: z.string().optional(),
+        famPro: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -68,8 +81,12 @@ export const famMemberRouter = createTRPCRouter({
         case "PARENT":
           reponse = await db.famMembers.create({
             data: {
-              FMname: input.FMname,
+              FM_name: input.FMname,
               FMfamId: input.famId ? input.famId : "AAA",
+              FM_dob: input.famDob ? input.famDob : null,
+              FM_Petname: input.famPetname ? input.famPetname : null,
+              FM_loc: input.famLoc ? input.famLoc : null,
+              FM_Professon: input.famPro ? input.famPro : null,
               // ParentId: input.parentId ? input.parentId : "AAA",
             },
           });
@@ -77,16 +94,24 @@ export const famMemberRouter = createTRPCRouter({
         case "SPOUSE":
           reponse = await db.famMembers.create({
             data: {
-              FMname: input.FMname,
+              FM_name: input.FMname,
               FMfamId: input.famId,
+              FM_dob: input.famDob ? input.famDob : null,
+              FM_Petname: input.famPetname ? input.famPetname : null,
+              FM_loc: input.famLoc ? input.famLoc : null,
+              FM_Professon: input.famPro ? input.famPro : null,
             },
           });
           break;
         case "CHILD":
           reponse = await db.famMembers.create({
             data: {
-              FMname: input.FMname,
+              FM_name: input.FMname,
               FMparentId: input.famId,
+              FM_dob: input.famDob ? input.famDob : null,
+              FM_Petname: input.famPetname ? input.famPetname : null,
+              FM_loc: input.famLoc ? input.famLoc : null,
+              FM_Professon: input.famPro ? input.famPro : null,
             },
           });
           break;

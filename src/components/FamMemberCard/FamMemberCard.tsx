@@ -22,16 +22,13 @@ import { type FMTypeKeys } from "~/constants/consts";
 import FamNavigationButton from "../famNavigationButton/FamNavigationButton";
 
 type FamMemberCardProps = {
-  memberName: string | null;
   MemberType: FMTypeKeys;
-  data: GetFamMemberType;
+  MemberData: GetFamMemberType;
 };
 
-const FamMemberCard = ({
-  memberName,
-  data,
-  MemberType,
-}: FamMemberCardProps) => {
+const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
+  const { FM_name, FM_Petname, FM_dob, FM_Professon } = MemberData;
+
   const [isFammemberCardOpen, setIsFamMemberCardOpen] = useState(false);
 
   const ctx = api.useContext();
@@ -47,8 +44,8 @@ const FamMemberCard = ({
   const openMemberModal = () => null;
 
   const handleFamMemberDelete = () => {
-    if (data !== undefined) {
-      deleteFamMember(data.id);
+    if (MemberData !== undefined) {
+      deleteFamMember(MemberData.id);
     } else {
       alert("member id undefined");
     }
@@ -64,7 +61,7 @@ const FamMemberCard = ({
         <Image src={ImgTemp} width={100} height={100} alt="img" />
       </CardContent>
       <CardFooter className="flex justify-center">
-        <CardTitle>{memberName}</CardTitle>
+        <CardTitle>{FM_name}</CardTitle>
       </CardFooter>
     </Card>
   );
@@ -72,11 +69,17 @@ const FamMemberCard = ({
   const renderMemberCartContent = () => (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>{memberName}</DialogTitle>
-        <DialogDescription>
-          This action cannot be undone. This will permanently delete your
-          account and remove your data from our servers.
-        </DialogDescription>
+        <div className="flex">
+          <div>
+            <Image src={""} alt="sdf" />
+          </div>
+          <div>
+            <DialogTitle>{FM_name}</DialogTitle>
+            <DialogDescription>Nickname: {FM_Petname}</DialogDescription>
+            <DialogDescription>Date of Birth: {FM_dob}</DialogDescription>
+            <DialogDescription>Profession: {FM_Professon}</DialogDescription>
+          </div>
+        </div>
       </DialogHeader>
       <DialogFooter>
         <Button disabled={isDeleteFamMemberLoading}>
@@ -105,7 +108,7 @@ const FamMemberCard = ({
       {MemberType === "PARENT" && (
         <FamNavigationButton
           memberType={MemberType}
-          navigateTo={data?.FMparentId}
+          navigateTo={MemberData?.FMparentId}
         />
       )}
 
@@ -120,7 +123,7 @@ const FamMemberCard = ({
       {MemberType === "CHILD" && (
         <FamNavigationButton
           memberType={MemberType}
-          navigateTo={data?.FMfamId}
+          navigateTo={MemberData?.FMfamId}
         />
       )}
     </div>

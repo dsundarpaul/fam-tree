@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { Toaster } from "react-hot-toast";
 import { Button } from "~/components/ui/button";
 import { api } from "~/utils/api";
 
@@ -24,9 +25,10 @@ export default function Home() {
             variant={"outline"}
             className="border-stone-900 hover:bg-slate-400"
           >
-            <Link href="/famId">Get Started</Link>
+            <Link href="/fam-to-fam/famId">Get Started</Link>
           </Button>
         </div>
+        <Toaster />
       </main>
     </>
   );

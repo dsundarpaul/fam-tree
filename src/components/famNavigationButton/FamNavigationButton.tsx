@@ -21,16 +21,16 @@ const FamNavigationButton = ({
         }  w-full  bg-transparent text-slate-600 hover:animate-bounce hover:bg-transparent `}
         // onClick={() => callback()}
       >
-        <Link href={`/${navigateTo}`}>
+        <Link href={`/fam-to-fam/${navigateTo}`} className="flex items-center">
           {memberType === "PARENT" ? (
             <>
-              <ArrowUpIcon />
+              <ArrowUpIcon className="mr-2" />
               <div>Go Pervious</div>
             </>
           ) : (
             <>
               Show Family
-              <ArrowDownIcon className="text-black" />
+              <ArrowDownIcon className="ml-2" />
             </>
           )}
         </Link>

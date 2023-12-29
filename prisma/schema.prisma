@@ -20,10 +20,15 @@ model Post {
 }
 
 model FamMembers {
-    id         String    @id @unique @default(uuid())
-    FMname     String
-    FMdob      DateTime?
-    FMisAlive  Boolean?  @default(true)
-    FMfamId    String?   @default(uuid())
-    FMparentId String?   @default(uuid())
+    id         String  @id @unique @default(uuid())
+    FMfamId    String? @default(uuid())
+    FMparentId String? @default(uuid())
+
+    FM_name      String
+    FM_dp        String?
+    FM_isAlive   Boolean? @default(true)
+    FM_dob       String?
+    FM_Petname   String?
+    FM_Professon String?
+    FM_loc       String?
 }
