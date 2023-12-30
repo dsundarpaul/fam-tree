@@ -69,15 +69,28 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
   const renderMemberCartContent = () => (
     <DialogContent>
       <DialogHeader>
-        <div className="flex">
+        <div className="flex space-x-5">
           <div>
             <Image src={""} alt="sdf" />
           </div>
           <div>
-            <DialogTitle>{FM_name}</DialogTitle>
-            <DialogDescription>Nickname: {FM_Petname}</DialogDescription>
-            <DialogDescription>Date of Birth: {FM_dob}</DialogDescription>
-            <DialogDescription>Profession: {FM_Professon}</DialogDescription>
+            <DialogTitle className="pb-5 text-4xl">{FM_name}</DialogTitle>
+            <DialogDescription className="font-mono text-lg text-black">
+              Nickname:{" "}
+              <span className="font-bold">
+                {FM_Petname ? FM_Petname : "N/A"}
+              </span>
+            </DialogDescription>
+            <DialogDescription className="font-mono text-lg text-black">
+              Date of Birth:{" "}
+              <span className="font-bold">{FM_dob ? FM_dob : "N/A"}</span>
+            </DialogDescription>
+            <DialogDescription className="font-mono text-lg text-black">
+              Profession:{" "}
+              <span className="font-bold">
+                {FM_Professon ? FM_Professon : "N/A"}
+              </span>
+            </DialogDescription>
           </div>
         </div>
       </DialogHeader>
