@@ -1,5 +1,12 @@
+import { type ReactNode } from "react";
 import * as z from "zod";
 import { type RouterOutputs } from "~/utils/api";
+
+export interface SidebarLink {
+  icon: string;
+  route: string;
+  label: string;
+}
 
 export type famMemberType = {
   id: string;
