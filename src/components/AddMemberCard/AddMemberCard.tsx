@@ -49,10 +49,11 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
 
   const { mutate: addFamMember, isLoading: isAddFamMemberLoading } =
     api.famMember.addFamMember.useMutation({
-      onSuccess: () => {
+      onSuccess: async () => {
+        await ctx.famMember.getFamById.invalidate();
+
         toast.success("Added a Fam Member 🎊", { duration: 2000 });
         setIsAddFamMemberDialogOpen(false);
-        void ctx.famMember.getFamById.invalidate();
       },
       onError: () => {
         toast.error("Something went Worng");
@@ -85,14 +86,13 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       famLoc: values.location,
       famPro: values.profession,
     });
-
-    setIsAddFamMemberDialogOpen(false);
   }
 
   const renderNameField = () => (
     <FormField
       control={form.control}
       name="fullName"
+      disabled={isAddFamMemberLoading}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Full Name</FormLabel>
@@ -110,6 +110,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     <FormField
       control={form.control}
       name="isAlive"
+      disabled={isAddFamMemberLoading}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Is Alive ?</FormLabel>
@@ -147,6 +148,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     <FormField
       control={form.control}
       name="dob"
+      disabled={isAddFamMemberLoading}
       render={({ field }) => (
         <FormItem className="flex flex-col">
           {/* <FormItem className="flex items-center space-x-3 space-y-0"> */}
@@ -168,6 +170,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     <FormField
       control={form.control}
       name="petname"
+      disabled={isAddFamMemberLoading}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Petname / Nickname</FormLabel>
@@ -185,6 +188,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     <FormField
       control={form.control}
       name="profession"
+      disabled={isAddFamMemberLoading}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Profession</FormLabel>
@@ -201,6 +205,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     <FormField
       control={form.control}
       name="location"
+      disabled={isAddFamMemberLoading}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Know to live in</FormLabel>

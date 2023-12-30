@@ -20,6 +20,7 @@ import { api } from "~/utils/api";
 import { type GetFamMemberType } from "~/types";
 import { type FMTypeKeys } from "~/constants/consts";
 import FamNavigationButton from "../famNavigationButton/FamNavigationButton";
+import toast from "react-hot-toast";
 
 type FamMemberCardProps = {
   MemberType: FMTypeKeys;
@@ -35,8 +36,10 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
 
   const { mutate: deleteFamMember, isLoading: isDeleteFamMemberLoading } =
     api.famMember.deleteFamMember.useMutation({
-      onSuccess: () => {
-        void ctx.famMember.getFamById.invalidate();
+      onSuccess: async () => {
+        await ctx.famMember.getFamById.invalidate();
+
+        toast.success("Sucessfully Deleted Family Member");
         setIsFamMemberCardOpen(false);
       },
     });
