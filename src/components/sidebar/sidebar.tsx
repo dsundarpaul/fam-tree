@@ -1,9 +1,7 @@
 import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
-import { ScrollArea } from "../ui/scroll-area";
 
 import { NAV_CONSTS } from "~/constants/navConsts";
-import { CalendarIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";

@@ -1,5 +1,4 @@
 import React from "react";
-import { data } from "tailwindcss/defaultTheme";
 import { LoadingState } from "~/components/loading-state/LoadingState";
 import { api } from "~/utils/api";
 

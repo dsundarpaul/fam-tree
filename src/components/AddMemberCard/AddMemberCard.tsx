@@ -25,7 +25,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { CalendarIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 
 import AddMemberButton from "../AddMemberButton/AddMemberButton";
@@ -34,10 +34,6 @@ import { useForm } from "react-hook-form";
 
 import { AddFamMemberformSchema } from "./formSchema";
 import { type AddMemberCardPropsType } from "./types";
-import { Calendar } from "../ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { cn } from "~/lib/utils";
-import { format } from "date-fns";
 import DateOfBirthPicker from "../ui/date-picker/date-picker";
 import toast, { Toaster } from "react-hot-toast";
 

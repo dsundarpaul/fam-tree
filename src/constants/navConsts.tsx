@@ -1,4 +1,3 @@
-import { CalendarIcon } from "@radix-ui/react-icons";
 import { type SidebarLink } from "~/types";
 
 export const NAV_CONSTS: SidebarLink[] = [

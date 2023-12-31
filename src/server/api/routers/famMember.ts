@@ -3,7 +3,6 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { db } from "~/server/db";
 import { TRPCError } from "@trpc/server";
 import type { FamMembers } from "@prisma/client";
-import { type MonthwiseBirthDayCollectionType } from "~/types";
 import { getCalendarDates } from "../helpers/getCalendarDates";
 
 export const famMemberRouter = createTRPCRouter({
@@ -74,7 +73,7 @@ export const famMemberRouter = createTRPCRouter({
         famPro: z.string().optional(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       let reponse;
