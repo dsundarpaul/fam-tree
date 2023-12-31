@@ -3,6 +3,8 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { db } from "~/server/db";
 import { TRPCError } from "@trpc/server";
 import type { FamMembers } from "@prisma/client";
+import { type MonthwiseBirthDayCollectionType } from "~/types";
+import { getCalendarDates } from "../helpers/getCalendarDates";
 
 export const famMemberRouter = createTRPCRouter({
   getFamByParentId: publicProcedure
@@ -140,4 +142,18 @@ export const famMemberRouter = createTRPCRouter({
 
       return user;
     }),
+
+  getCalendarDates: publicProcedure.input(z.null()).query(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    const NameByDob = await db.famMembers.findMany({
+      select: {
+        FM_name: true,
+        FM_dob: true,
+      },
+    });
+
+    const dates = getCalendarDates(NameByDob);
+
+    return dates;
+  }),
 });

@@ -32,3 +32,11 @@ export const FMObjectType = z.object({
 
 export type GetFamMemberType =
   RouterOutputs["famMember"]["getFamById"]["children"][number];
+
+export type MonthwiseBirthDayCollectionType = {
+  month: string;
+  birthdays: {
+    memberName: string;
+    date: string;
+  }[];
+};

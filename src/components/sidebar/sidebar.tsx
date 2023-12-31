@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 
 export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
   const pathname = usePathname();
+
   return (
     // <div className={cn("pb-12", className)}>
     <div
@@ -30,7 +31,7 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
           <div className="space-y-2">
             {NAV_CONSTS.map((item, idx) => {
               const isActive =
-                (pathname.includes(item.route) && item.route.length > 1) ||
+                (pathname?.includes(item.route) && item.route.length > 1) ||
                 pathname === item.route;
               return (
                 <Link href={item.route} className="flex items-center" key={idx}>
