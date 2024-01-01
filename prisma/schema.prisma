@@ -20,19 +20,11 @@ generator client {
     provider = "prisma-client-js"
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([name])
-}
-
 model FamMembers {
     id         String  @id @unique @default(uuid())
     FMfamId    String? @default(uuid())
     FMparentId String? @default(uuid())
+    authorId   String
 
     FM_name      String
     FM_dp        String?
@@ -41,4 +33,6 @@ model FamMembers {
     FM_Petname   String?
     FM_Professon String?
     FM_loc       String?
+
+    @@index([authorId])
 }
