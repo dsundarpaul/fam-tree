@@ -3,8 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import BlobIcon from "../../../public/blob.svg";
+import { SignIn, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 const Navbar = () => {
+  const user = useUser();
+
   return (
     <nav className=" flex items-center justify-between space-x-4 px-10 pt-4 lg:space-x-6">
       <div className="flex items-center justify-between space-x-4 lg:space-x-6">
@@ -42,7 +45,13 @@ const Navbar = () => {
         </Link>
       </div>
       <div>
-        <Button>Login</Button>
+        {user.isSignedIn ? (
+          <UserButton afterSignOutUrl="/" />
+        ) : (
+          <Button>
+            <SignInButton />
+          </Button>
+        )}
       </div>
     </nav>
   );
