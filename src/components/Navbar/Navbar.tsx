@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import BlobIcon from "../../../public/blob.svg";
-import { SignIn, SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 const Navbar = () => {
   const user = useUser();

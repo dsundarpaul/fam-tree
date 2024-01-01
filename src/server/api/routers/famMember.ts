@@ -2,10 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { db } from "~/server/db";
 import { TRPCError } from "@trpc/server";
-import type { FamMembers } from "@prisma/client";
 import { getCalendarDates } from "../helpers/getCalendarDates";
-import { clerkClient, useUser } from "@clerk/nextjs";
-import input from "postcss/lib/input";
 
 export const famMemberRouter = createTRPCRouter({
   getFamById: publicProcedure
