@@ -16,8 +16,8 @@ const Calendar = () => {
             {item.birthdays.length > 0 ? (
               item.birthdays.map((item, idx) => (
                 <div key={idx} className="rounded-md border-2 border-black p-4">
-                  <div>{item.date}</div>
                   <div>{item.memberName}</div>
+                  <div>{item.date}</div>
                 </div>
               ))
             ) : (

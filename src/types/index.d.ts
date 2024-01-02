@@ -1,5 +1,6 @@
+import { Prisma } from "@prisma/client";
 import * as z from "zod";
-import { type RouterOutputs } from "~/utils/api";
+import { RouterInputs, type RouterOutputs } from "~/utils/api";
 
 export interface SidebarLink {
   icon: string;
