@@ -1,4 +1,5 @@
-import { type Prisma, type FamMembers } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 const getAddFMbodyProps = z.object({
@@ -21,12 +22,16 @@ export const getAddFMbody = (input: z.infer<typeof getAddFMbodyProps>) => {
     // authorId,
   };
 
-  if (input.FMType === "PARENT" || "SPOUSE") {
-    // dataBody = { ...tempObject, FMfamId: input.famId ? input.famId : "AAA" };
-
-    dataBody.FMfamId = input.famId ? input.famId : "AAA";
-  } else {
-    dataBody.FMparentId = input.famId;
+  switch (input.FMType) {
+    case "PARENT":
+    case "SPOUSE":
+      dataBody.FMfamId = input.famId ? input.famId : "AAA";
+      break;
+    case "CHILD":
+      dataBody.FMparentId = input.famId;
+      break;
+    default:
+      throw new TRPCError({ code: "BAD_REQUEST" });
   }
 
   return dataBody;
