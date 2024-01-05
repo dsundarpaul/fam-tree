@@ -73,7 +73,9 @@ function AddFamily() {
       ) : (
         <>
           {renderParents()}
-          {data?.parents && data.parents.length > 0 && renderChildren()}
+          {((data?.children && data.children.length > 0) ??
+            (data?.parents && data?.parents.length > 0)) &&
+            renderChildren()}
         </>
       )}
 
