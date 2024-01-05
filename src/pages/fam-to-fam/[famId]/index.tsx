@@ -73,7 +73,8 @@ function AddFamily() {
       ) : (
         <>
           {renderParents()}
-          {((data?.children && data.children.length > 0) ??
+          {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-nullish-coalescing */}
+          {((data?.children && data.children.length > 0) ||
             (data?.parents && data?.parents.length > 0)) &&
             renderChildren()}
         </>
