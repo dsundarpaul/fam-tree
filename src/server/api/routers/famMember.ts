@@ -18,7 +18,12 @@ export const famMemberRouter = createTRPCRouter({
       });
 
       const selectedFamChildren = await ctx.db.famMembers.findMany({
-        where: { FMparentId: input },
+        where: {
+          AND: {
+            FMparentId: { equals: input },
+            authorId: { equals: authorId },
+          },
+        },
       });
 
       return {
@@ -40,6 +45,7 @@ export const famMemberRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       const authorId = ctx.userId;
 
       //TODO: try removing reponse and dirtectly returning

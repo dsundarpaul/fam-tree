@@ -34,5 +34,17 @@ model FamMembers {
     FM_Professon String?
     FM_loc       String?
 
+    canDelete Boolean? @default(true)
+
+    images modSpaces[]
+}
+
+model modSpaces {
+    id       String @id @unique @default(uuid())
+    filename String
+
+    famMember FamMembers @relation(fields: [authorId], references: [id])
+    authorId  String
+
     @@index([authorId])
 }

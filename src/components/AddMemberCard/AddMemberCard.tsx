@@ -36,10 +36,14 @@ import { AddFamMemberformSchema } from "./formSchema";
 import { type AddMemberCardPropsType } from "./types";
 import DateOfBirthPicker from "../ui/date-picker/date-picker";
 import toast, { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
 const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const [isAddFammemberDialogOpen, setIsAddFamMemberDialogOpen] =
     useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [base64Data, setBase64Data] = useState("");
 
   const ctx = api.useContext();
 
@@ -55,6 +59,17 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
         toast.error("Something went Worng");
       },
     });
+
+  const { mutate: uploadDpImage } = api.media.uploadMedia.useMutation({
+    onSuccess: () => {
+      toast.success("Sucessfully uploaded Display picture");
+    },
+    onError: () => {
+      toast.error("Something went Worng");
+    },
+  });
+
+  const { mutate: getSignedURL } = api.media.createSignedURL.useMutation()
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof AddFamMemberformSchema>>({
@@ -83,6 +98,39 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       famPro: values.profession,
     });
   }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files?.[0]) {
+      const selectedFile: File = event.target.files?.[0];
+
+      setFile(selectedFile);
+
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+
+        const result = reader.result;
+        if (typeof result === "string") {
+          // setBase64Data(result.toString().split(",")[1]); // Extract base64 data from the result
+        }
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleImageUpload = () => {
+    if (file) {
+      console.log(file.type);
+      const data = getSignedURL('')
+      console.log({ data})
+      // uploadDpImage({ file: file });
+
+      
+    } else {
+      alert("file not avaialbe");
+    }
+  };
 
   const renderNameField = () => (
     <FormField
@@ -218,16 +266,36 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const renderForm = () => (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex gap-4">
-          {renderNameField()}
-          {renderPetnameField()}
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="w-full">
+            <Input type="file" onChange={handleFileChange} />
+            {previewUrl && (
+              <div>
+                <h2>Image Preview</h2>
+                <Image
+                  src={previewUrl}
+                  alt="Image Preview"
+                  width={200}
+                  height={200}
+                />
+              </div>
+            )}
+            <Button onClick={() => handleImageUpload()}>Upload</Button>
+          </div>
+          <div className="w-full">
+            <div className="flex gap-4">
+              {renderNameField()}
+              {renderPetnameField()}
+            </div>
+            <div className="flex gap-4">
+              {renderProfessionField()}
+              {renderLocationField()}
+            </div>
+
+            {renderDOBField()}
+            {renderIsAliveField()}
+          </div>
         </div>
-        <div className="flex gap-4">
-          {renderProfessionField()}
-          {renderLocationField()}
-        </div>
-        {renderDOBField()}
-        {renderIsAliveField()}
 
         <DialogFooter>
           {/* <DialogCancel>Cancel</DialogCancel> */}
