@@ -10,6 +10,7 @@ const getAddFMbodyProps = z.object({
   famPetname: z.string().optional(),
   famLoc: z.string().optional(),
   famPro: z.string().optional(),
+  famDp: z.string().optional(),
 });
 
 export const getAddFMbody = (input: z.infer<typeof getAddFMbodyProps>) => {
@@ -19,6 +20,7 @@ export const getAddFMbody = (input: z.infer<typeof getAddFMbodyProps>) => {
     FM_Petname: input.famPetname ? input.famPetname : null,
     FM_loc: input.famLoc ? input.famLoc : null,
     FM_Professon: input.famPro ? input.famPro : null,
+    FM_dp: input.famDp ? input.famDp : null,
     // authorId,
   };
 

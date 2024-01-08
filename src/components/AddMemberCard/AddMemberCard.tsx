@@ -35,15 +35,16 @@ import { useForm } from "react-hook-form";
 import { AddFamMemberformSchema } from "./formSchema";
 import { type AddMemberCardPropsType } from "./types";
 import DateOfBirthPicker from "../ui/date-picker/date-picker";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import Image from "next/image";
+import OtherThingsUploadBtn from "../OtheringsUploadBtn/OthertingsUploadBtn";
 
 const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const [isAddFammemberDialogOpen, setIsAddFamMemberDialogOpen] =
     useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [base64Data, setBase64Data] = useState("");
+  const [uploadedImageURL, setUploadedImageURL] = useState<string | undefined>(
+    undefined,
+  );
 
   const ctx = api.useContext();
 
@@ -60,17 +61,6 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       },
     });
 
-  const { mutate: uploadDpImage } = api.media.uploadMedia.useMutation({
-    onSuccess: () => {
-      toast.success("Sucessfully uploaded Display picture");
-    },
-    onError: () => {
-      toast.error("Something went Worng");
-    },
-  });
-
-  const { mutate: getSignedURL } = api.media.createSignedURL.useMutation()
-
   // 1. Define your form.
   const form = useForm<z.infer<typeof AddFamMemberformSchema>>({
     resolver: zodResolver(AddFamMemberformSchema),
@@ -86,8 +76,6 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof AddFamMemberformSchema>) {
-    console.log(values, "************");
-
     addFamMember({
       FMname: values.fullName,
       FMType: FMType,
@@ -96,41 +84,9 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       famPetname: values.petname,
       famLoc: values.location,
       famPro: values.profession,
+      famDp: uploadedImageURL,
     });
   }
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.[0]) {
-      const selectedFile: File = event.target.files?.[0];
-
-      setFile(selectedFile);
-
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-
-        const result = reader.result;
-        if (typeof result === "string") {
-          // setBase64Data(result.toString().split(",")[1]); // Extract base64 data from the result
-        }
-      };
-      reader.readAsDataURL(selectedFile);
-    }
-  };
-
-  const handleImageUpload = () => {
-    if (file) {
-      console.log(file.type);
-      const data = getSignedURL('')
-      console.log({ data})
-      // uploadDpImage({ file: file });
-
-      
-    } else {
-      alert("file not avaialbe");
-    }
-  };
 
   const renderNameField = () => (
     <FormField
@@ -268,19 +224,21 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="w-full">
-            <Input type="file" onChange={handleFileChange} />
-            {previewUrl && (
+            {uploadedImageURL ? (
               <div>
                 <h2>Image Preview</h2>
                 <Image
-                  src={previewUrl}
+                  src={uploadedImageURL}
                   alt="Image Preview"
                   width={200}
                   height={200}
                 />
               </div>
+            ) : (
+              <OtherThingsUploadBtn
+                onUploadCompleteCallback={(url) => setUploadedImageURL(url)}
+              />
             )}
-            <Button onClick={() => handleImageUpload()}>Upload</Button>
           </div>
           <div className="w-full">
             <div className="flex gap-4">
@@ -307,7 +265,6 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
           </Button>
         </DialogFooter>
       </form>
-      <Toaster />
     </Form>
   );
 
@@ -315,7 +272,10 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     <>
       <Dialog
         open={isAddFammemberDialogOpen}
-        onOpenChange={(open) => setIsAddFamMemberDialogOpen(open)}
+        onOpenChange={(open) => {
+          setIsAddFamMemberDialogOpen(open);
+          setUploadedImageURL(undefined);
+        }}
       >
         <DialogTrigger>
           <AddMemberButton callback={() => null} />

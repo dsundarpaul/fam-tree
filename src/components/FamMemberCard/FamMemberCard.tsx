@@ -18,7 +18,7 @@ import { Pencil2Icon, ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { api } from "~/utils/api";
 import { type GetFamMemberType } from "~/types";
-import { type FMTypeKeys } from "~/constants/consts";
+import { FILLER_IMAGE, type FMTypeKeys } from "~/constants/consts";
 import FamNavigationButton from "../famNavigationButton/FamNavigationButton";
 import toast from "react-hot-toast";
 
@@ -48,7 +48,10 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
 
   const handleFamMemberDelete = () => {
     if (MemberData !== undefined) {
-      deleteFamMember(MemberData.id);
+      deleteFamMember({
+        memberId: MemberData.id,
+        memberParentFamId: MemberData.FMparentId,
+      });
     } else {
       alert("member id undefined");
     }
@@ -61,7 +64,12 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
       onClick={() => openMemberModal()}
     >
       <CardContent className="flex justify-center">
-        <Image src={ImgTemp} width={100} height={100} alt="img" />
+        <Image
+          src={MemberData.FM_dp ? MemberData.FM_dp : ImgTemp}
+          width={100}
+          height={100}
+          alt="img"
+        />
       </CardContent>
       <CardFooter className="flex justify-center">
         <CardTitle>{FM_name}</CardTitle>
@@ -74,7 +82,12 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
       <DialogHeader>
         <div className="flex space-x-5">
           <div>
-            <Image src={""} alt="sdf" />
+            <Image
+              src={MemberData.FM_dp ? MemberData.FM_dp : FILLER_IMAGE}
+              alt="Member Image"
+              width={100}
+              height={100}
+            />
           </div>
           <div>
             <DialogTitle className="pb-5 text-4xl">{FM_name}</DialogTitle>
@@ -105,7 +118,7 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
 
         <Button
           variant="destructive"
-          disabled={isDeleteFamMemberLoading}
+          disabled={isDeleteFamMemberLoading || !MemberData.canDelete}
           onClick={() => handleFamMemberDelete()}
         >
           {isDeleteFamMemberLoading ? (
