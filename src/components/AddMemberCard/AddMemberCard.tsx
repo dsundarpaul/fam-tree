@@ -35,11 +35,16 @@ import { useForm } from "react-hook-form";
 import { AddFamMemberformSchema } from "./formSchema";
 import { type AddMemberCardPropsType } from "./types";
 import DateOfBirthPicker from "../ui/date-picker/date-picker";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import OtherThingsUploadBtn from "../OtheringsUploadBtn/OthertingsUploadBtn";
 
 const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const [isAddFammemberDialogOpen, setIsAddFamMemberDialogOpen] =
     useState(false);
+  const [uploadedImageURL, setUploadedImageURL] = useState<string | undefined>(
+    undefined,
+  );
 
   const ctx = api.useContext();
 
@@ -71,8 +76,6 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof AddFamMemberformSchema>) {
-    console.log(values, "************");
-
     addFamMember({
       FMname: values.fullName,
       FMType: FMType,
@@ -81,6 +84,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       famPetname: values.petname,
       famLoc: values.location,
       famPro: values.profession,
+      famDp: uploadedImageURL,
     });
   }
 
@@ -218,16 +222,38 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const renderForm = () => (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex gap-4">
-          {renderNameField()}
-          {renderPetnameField()}
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="w-full">
+            {uploadedImageURL ? (
+              <div>
+                <h2>Image Preview</h2>
+                <Image
+                  src={uploadedImageURL}
+                  alt="Image Preview"
+                  width={200}
+                  height={200}
+                />
+              </div>
+            ) : (
+              <OtherThingsUploadBtn
+                onUploadCompleteCallback={(url) => setUploadedImageURL(url)}
+              />
+            )}
+          </div>
+          <div className="w-full">
+            <div className="flex gap-4">
+              {renderNameField()}
+              {renderPetnameField()}
+            </div>
+            <div className="flex gap-4">
+              {renderProfessionField()}
+              {renderLocationField()}
+            </div>
+
+            {renderDOBField()}
+            {renderIsAliveField()}
+          </div>
         </div>
-        <div className="flex gap-4">
-          {renderProfessionField()}
-          {renderLocationField()}
-        </div>
-        {renderDOBField()}
-        {renderIsAliveField()}
 
         <DialogFooter>
           {/* <DialogCancel>Cancel</DialogCancel> */}
@@ -239,7 +265,6 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
           </Button>
         </DialogFooter>
       </form>
-      <Toaster />
     </Form>
   );
 
@@ -247,7 +272,10 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     <>
       <Dialog
         open={isAddFammemberDialogOpen}
-        onOpenChange={(open) => setIsAddFamMemberDialogOpen(open)}
+        onOpenChange={(open) => {
+          setIsAddFamMemberDialogOpen(open);
+          setUploadedImageURL(undefined);
+        }}
       >
         <DialogTrigger>
           <AddMemberButton callback={() => null} />

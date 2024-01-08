@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/router";
 import AddMemberCard from "~/components/AddMemberCard/AddMemberCard";
 import FamMemberCard from "~/components/FamMemberCard/FamMemberCard";
@@ -41,30 +40,37 @@ function AddFamily() {
     </div>
   );
 
-  const renderChildren = () => (
-    <div className="children mt-20 flex w-full flex-wrap items-center justify-around ">
-      {data?.children && (
-        <>
-          {data?.children?.map((child, idx: number) => {
-            return (
-              <div
-                key={idx}
-                // onClick={() => hanldeOnClickNavigation(child.navigateTo)}
-              >
-                {child && (
-                  <FamMemberCard
-                    MemberData={child}
-                    MemberType={FamMember.CHILD}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </>
-      )}
-      <AddMemberCard famId={famId} FMType={FamMember.CHILD} />
-    </div>
-  );
+  const renderChildren = () => {
+    if (
+      (data?.children && data.children.length > 0) ??
+      (data?.parents && data?.parents.length > 0)
+    ) {
+      return (
+        <div className="children mt-20 flex w-full flex-wrap items-center justify-around ">
+          {data?.children && (
+            <>
+              {data?.children?.map((child, idx: number) => {
+                return (
+                  <div
+                    key={idx}
+                    // onClick={() => hanldeOnClickNavigation(child.navigateTo)}
+                  >
+                    {child && (
+                      <FamMemberCard
+                        MemberData={child}
+                        MemberType={FamMember.CHILD}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </>
+          )}
+          <AddMemberCard famId={famId} FMType={FamMember.CHILD} />
+        </div>
+      );
+    }
+  };
 
   return (
     <div>
@@ -73,7 +79,8 @@ function AddFamily() {
       ) : (
         <>
           {renderParents()}
-          {data?.parents && data.parents.length > 0 && renderChildren()}
+          {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-nullish-coalescing */}
+          {renderChildren()}
         </>
       )}
 

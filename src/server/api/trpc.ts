@@ -34,11 +34,11 @@ type CreateContextOptions = Record<string, never>;
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = (_opts: CreateContextOptions) => {
-  return {
-    db,
-  };
-};
+// const createInnerTRPCContext = (_opts: CreateContextOptions) => {
+//   return {
+//     db,
+//   };
+// };
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -46,13 +46,13 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  const { req } = _opts;
+export const createTRPCContext = (opts: CreateNextContextOptions) => {
+  const { req } = opts;
   const sesh = getAuth(req);
 
   const userId = sesh.userId;
 
-  // return createInnerTRPCContext({});
+  // return createInnerTRPCContext({}); used for testing
   return {
     db,
     userId,

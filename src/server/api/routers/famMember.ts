@@ -1,16 +1,15 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, privateProcedure, publicProcedure } from "../trpc";
 import { db } from "~/server/db";
 import { TRPCError } from "@trpc/server";
 import { getCalendarDates } from "../helpers/getCalendarDates";
+import { getAddFMbody } from "../helpers/getAddFMbody";
 
 export const famMemberRouter = createTRPCRouter({
-  getFamById: publicProcedure
+  getFamById: privateProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const authorId = ctx.userId;
-
-      if (!authorId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const selectedFam = await ctx.db.famMembers.findMany({
         where: {
@@ -19,7 +18,12 @@ export const famMemberRouter = createTRPCRouter({
       });
 
       const selectedFamChildren = await ctx.db.famMembers.findMany({
-        where: { FMparentId: input },
+        where: {
+          AND: {
+            FMparentId: { equals: input },
+            authorId: { equals: authorId },
+          },
+        },
       });
 
       return {
@@ -28,7 +32,7 @@ export const famMemberRouter = createTRPCRouter({
       };
     }),
 
-  addFamMember: publicProcedure
+  addFamMember: privateProcedure
     .input(
       z.object({
         FMname: z.string(),
@@ -38,82 +42,62 @@ export const famMemberRouter = createTRPCRouter({
         famPetname: z.string().optional(),
         famLoc: z.string().optional(),
         famPro: z.string().optional(),
+        famDp: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       const authorId = ctx.userId;
-      if (!authorId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      await db.famMembers.updateMany({
+        where: { FMfamId: input.famId },
+        data: { canDelete: false },
+      });
 
       //TODO: try removing reponse and dirtectly returning
-      let reponse;
 
-      const dataBody = {
-        FM_name: input.FMname,
-        FM_dob: input.famDob ? input.famDob : null,
-        FM_Petname: input.famPetname ? input.famPetname : null,
-        FM_loc: input.famLoc ? input.famLoc : null,
-        FM_Professon: input.famPro ? input.famPro : null,
-        authorId,
-      };
+      const dataBody = getAddFMbody(input);
 
-      switch (input.FMType) {
-        case "PARENT":
-          reponse = await db.famMembers.create({
-            data: {
-              ...dataBody,
-              FMfamId: input.famId ? input.famId : "AAA",
-              // ParentId: input.parentId ? input.parentId : "AAA",
-            },
-          });
-          break;
-        case "SPOUSE":
-          reponse = await db.famMembers.create({
-            data: {
-              ...dataBody,
-              FMfamId: input.famId ? input.famId : "AAA",
-            },
-          });
-          break;
-        case "CHILD":
-          reponse = await db.famMembers.create({
-            data: {
-              ...dataBody,
-              FMparentId: input.famId,
-            },
-          });
-          break;
-        default:
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Invalid FMTYpe",
-          });
-      }
+      const reponse = await db.famMembers.create({
+        data: {
+          ...dataBody,
+          authorId: authorId,
+          // ParentId: input.parentId ? input.parentId : "AAA",
+        },
+      });
 
       console.log({ reponse });
 
       return reponse;
     }),
 
-  deleteFamMember: publicProcedure
-    .input(z.string())
+  deleteFamMember: privateProcedure
+    .input(
+      z.object({
+        memberId: z.string(),
+        memberParentFamId: z.string().nullable(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const authorId = ctx.userId;
 
-      if (!authorId) throw new TRPCError({ code: "UNAUTHORIZED" });
-
       const user = await db.famMembers.delete({
         where: {
-          id: input,
+          id: input.memberId,
         },
+      });
+
+      await db.famMembers.updateMany({
+        where: { FMfamId: input.memberParentFamId },
+        data: { canDelete: true },
       });
 
       return user;
     }),
 
-  getCalendarDates: publicProcedure.input(z.null()).query(async ({ ctx }) => {
+  getCalendarDates: privateProcedure.input(z.null()).query(async ({ ctx }) => {
     const authorId = ctx.userId;
 
-    if (!authorId) throw new TRPCError({ code: "UNAUTHORIZED" });
     const NameByDob = await db.famMembers.findMany({
       select: {
         FM_name: true,

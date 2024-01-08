@@ -1,5 +1,6 @@
+import { Prisma } from "@prisma/client";
 import * as z from "zod";
-import { type RouterOutputs } from "~/utils/api";
+import { RouterInputs, type RouterOutputs } from "~/utils/api";
 
 export interface SidebarLink {
   icon: string;
@@ -31,6 +32,9 @@ export const FMObjectType = z.object({
 
 export type GetFamMemberType =
   RouterOutputs["famMember"]["getFamById"]["children"][number];
+
+export type SignedUploadURLType =
+  RouterOutputs["media"]["createSignedURL"]["signedUploadURLData"];
 
 export type MonthwiseBirthDayCollectionType = {
   month: string;
