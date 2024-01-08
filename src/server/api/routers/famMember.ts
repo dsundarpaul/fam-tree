@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { createTRPCRouter, privateProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, privateProcedure } from "../trpc";
 import { db } from "~/server/db";
-import { TRPCError } from "@trpc/server";
 import { getCalendarDates } from "../helpers/getCalendarDates";
 import { getAddFMbody } from "../helpers/getAddFMbody";
 
@@ -62,7 +61,6 @@ export const famMemberRouter = createTRPCRouter({
         data: {
           ...dataBody,
           authorId: authorId,
-          // ParentId: input.parentId ? input.parentId : "AAA",
         },
       });
 
