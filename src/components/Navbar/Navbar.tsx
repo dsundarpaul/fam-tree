@@ -27,22 +27,23 @@ const Navbar = () => {
         </Link>
 
         <Link
-          href="/examples/dashboard"
+          href="/"
           className="font-medium transition-colors hover:text-primary sm:text-xl "
         >
           Discover
         </Link>
         <Link
-          href="/examples/dashboard"
+          href="https://github.com/dsundarpaul/fam-tree"
+          target="_blank"
           className="font-medium text-muted-foreground transition-colors hover:text-primary sm:text-xl"
         >
           Open Source
         </Link>
         <Link
-          href="/examples/dashboard"
+          href="/about-me"
           className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary sm:text-xl"
         >
-          About Us
+          About Me
         </Link>
       </div>
       <div className="flex space-x-2">

@@ -9,6 +9,12 @@ import { NAV_CONSTS } from "~/constants/navConsts";
 import { Button } from "../ui/button";
 import BlobIcon from "../../../public/blob.svg";
 
+/* 
+***********
+TODO: Need to remove all unnessary classnames
+*********
+*/
+
 const NavConent = () => {
   const pathname = usePathname();
   return (
@@ -57,10 +63,7 @@ const MobileNav = () => {
             className="text-black invert sm:hidden"
           />
         </SheetTrigger>
-        <SheetContent
-          side="left"
-          className="background-light900_dark200 border-none"
-        >
+        <SheetContent side="right" className="border-none">
           <Link href="/" className="flex items-center gap-1">
             {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
             <Image src={BlobIcon} width={43} height={43} alt="famTree" />
@@ -82,7 +85,7 @@ const MobileNav = () => {
                 </SheetClose>
                 <SheetClose asChild>
                   <Link href="/sign-up">
-                    <Button className="small-medium  light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
+                    <Button className="small-medium  light-border-2 btn-tertiary  min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
                       Sign up
                     </Button>
                   </Link>
