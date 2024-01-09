@@ -47,7 +47,7 @@ function AddFamily() {
       (data?.parents && data?.parents.length > 0)
     ) {
       return (
-        <div className="children mt-20 flex w-full flex-wrap items-center justify-around ">
+        <div className="children mt-20 flex w-full flex-wrap items-center justify-around space-x-2 ">
           {data?.children && (
             <>
               {data?.children?.map((child, idx: number) => {
