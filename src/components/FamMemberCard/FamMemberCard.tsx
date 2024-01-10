@@ -85,8 +85,8 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
             <Image
               src={MemberData.FM_dp ? MemberData.FM_dp : FILLER_IMAGE}
               alt="Member Image"
-              width={100}
-              height={100}
+              width={150}
+              height={150}
             />
           </div>
           <div>
@@ -111,10 +111,10 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
         </div>
       </DialogHeader>
       <DialogFooter>
-        <Button disabled={isDeleteFamMemberLoading}>
+        {/* <Button disabled={isDeleteFamMemberLoading}>
           <Pencil2Icon className="mr-2" />
           Edit
-        </Button>
+        </Button> */}
 
         <Button
           variant="destructive"
