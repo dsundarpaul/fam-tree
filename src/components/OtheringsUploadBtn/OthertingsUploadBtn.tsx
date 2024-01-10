@@ -5,9 +5,11 @@ import { useState } from "react";
 
 type OtherThingsUploadBtnPropsType = {
   onUploadCompleteCallback: (url: string | undefined) => void;
+  isUploading: (isUploadingState: boolean) => void;
 };
 export default function OtherThingsUploadBtn({
   onUploadCompleteCallback,
+  isUploading,
 }: OtherThingsUploadBtnPropsType) {
   // const { mutate } = api.media.addImageUrl.useMutation();
 
@@ -19,11 +21,12 @@ export default function OtherThingsUploadBtn({
         endpoint="imageUploader"
         onClientUploadComplete={(res) => {
           // Do something with the response
-          console.log("Files: ", res);
-          alert("Upload Completed");
+          // console.log("Files: ", res);
           toast.success("Upload Completed");
+          isUploading(false);
           onUploadCompleteCallback(res[0]?.url);
         }}
+        onUploadBegin={() => isUploading(true)}
         onUploadError={(error: Error) => {
           // Do something with the error.
           alert(`ERROR! ${error.message}`);
