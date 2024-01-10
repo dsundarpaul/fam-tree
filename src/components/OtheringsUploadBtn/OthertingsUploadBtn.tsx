@@ -1,14 +1,15 @@
 import toast from "react-hot-toast";
-import { api } from "~/utils/api";
-import { UploadButton, UploadDropzone } from "~/utils/uploadthing";
+import { UploadDropzone } from "~/utils/uploadthing";
 import { Progress } from "../ui/progress";
 import { useState } from "react";
 
 type OtherThingsUploadBtnPropsType = {
   onUploadCompleteCallback: (url: string | undefined) => void;
+  isUploading: (isUploadingState: boolean) => void;
 };
 export default function OtherThingsUploadBtn({
   onUploadCompleteCallback,
+  isUploading,
 }: OtherThingsUploadBtnPropsType) {
   // const { mutate } = api.media.addImageUrl.useMutation();
 
@@ -16,34 +17,16 @@ export default function OtherThingsUploadBtn({
 
   return (
     <div className="flex flex-col items-center justify-between border-2 border-gray-300 p-2">
-      {/* <UploadButton
-        endpoint="imageUploader"
-        onClientUploadComplete={(res) => {
-          // Do something with the response
-          console.log("Files: ", res);
-          alert("Upload Completed");
-          toast.success("Upload Completed");
-        }}
-        onUploadError={(error: Error) => {
-          // Do something with the error.
-          alert(`ERROR! ${error.message}`);
-          toast.error("Upload Error");
-        }}
-        config={{ mode: "manual" }}
-        appearance={{ button: "bg-red-200 p-2", container: "bg-green-200" }}
-        content={{
-          button: (e) => (e.ready ? "Upload" : "Select File"),
-        }}
-      /> */}
       <UploadDropzone
         endpoint="imageUploader"
         onClientUploadComplete={(res) => {
           // Do something with the response
-          console.log("Files: ", res);
-          alert("Upload Completed");
+          // console.log("Files: ", res);
           toast.success("Upload Completed");
+          isUploading(false);
           onUploadCompleteCallback(res[0]?.url);
         }}
+        onUploadBegin={() => isUploading(true)}
         onUploadError={(error: Error) => {
           // Do something with the error.
           alert(`ERROR! ${error.message}`);

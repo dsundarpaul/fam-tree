@@ -45,6 +45,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const [uploadedImageURL, setUploadedImageURL] = useState<string | undefined>(
     undefined,
   );
+  const [isUploadingStateLoaindg, setIsUploadingStateLoading] = useState(false);
 
   const ctx = api.useContext();
 
@@ -237,6 +238,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
             ) : (
               <OtherThingsUploadBtn
                 onUploadCompleteCallback={(url) => setUploadedImageURL(url)}
+                isUploading={(state) => setIsUploadingStateLoading(state)}
               />
             )}
           </div>
@@ -257,7 +259,10 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
 
         <DialogFooter>
           {/* <DialogCancel>Cancel</DialogCancel> */}
-          <Button type="submit" disabled={isAddFamMemberLoading}>
+          <Button
+            type="submit"
+            disabled={isAddFamMemberLoading || isUploadingStateLoaindg}
+          >
             {isAddFamMemberLoading && (
               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
             )}

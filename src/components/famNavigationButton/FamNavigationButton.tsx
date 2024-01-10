@@ -18,7 +18,7 @@ const FamNavigationButton = ({
       <Button
         className={` ${
           memberType === "PARENT" ? "mb-2" : "mt-2"
-        }  w-full  bg-transparent text-slate-600 hover:animate-bounce hover:bg-transparent `}
+        }  w-full  bg-transparent text-slate-600 hover:animate-bounce hover:bg-transparent max-md:mb-10`}
         // onClick={() => callback()}
       >
         <Link href={`/fam-to-fam/${navigateTo}`} className="flex items-center">
@@ -29,7 +29,7 @@ const FamNavigationButton = ({
             </>
           ) : (
             <>
-              Show Family
+              <span>Show Family</span>
               <ArrowDownIcon className="ml-2" />
             </>
           )}
