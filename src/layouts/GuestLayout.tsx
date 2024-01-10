@@ -1,6 +1,5 @@
 import React, { type ReactNode } from "react";
 import Navbar from "~/components/Navbar/Navbar";
-import { Sidebar } from "~/components/sidebar/sidebar";
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   return (

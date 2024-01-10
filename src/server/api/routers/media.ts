@@ -4,7 +4,6 @@ import { createClient } from "@supabase/supabase-js";
 import { env } from "~/env.mjs";
 import { v4 as uuidv4 } from "uuid";
 import { TRPCError } from "@trpc/server";
-import { db } from "~/server/db";
 
 export const mediaRouter = createTRPCRouter({
   createSignedURL: privateProcedure
