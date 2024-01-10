@@ -10,7 +10,8 @@ const AboutUs = () => {
     <div>
       <h1 className="font-sans text-5xl leading-[60px]">
         Hey, My name is <span className="font-bold">Sundarpaul Dakkumalla</span>
-        , <br /> I am a Software Engineer and I love making things. <br />
+        , <br /> I am a Software Engineer 🧑🏽‍💻 and I love making cool things 🥶.{" "}
+        <br />
       </h1>
       <p className="pt-5 text-lg">
         I am from India, Pune/Hyderbad. Diploma in Computer Science, with 2+
@@ -20,6 +21,7 @@ const AboutUs = () => {
       <div className="flex space-x-5 pt-10">
         <div className=" text-xl font-semibold">Check out My socials: </div>
         <Link href={"https://github.com/dsundarpaul"} target="_blank">
+          {/* <span className="text-5xl">🐈‍⬛</span> */}
           <Image
             src={GithubIcon as string}
             width={30}
@@ -28,6 +30,7 @@ const AboutUs = () => {
           />
         </Link>
         <Link href={"https://twitter.com/dSundarpaul"} target="_blank">
+          {/* ✖️ */}
           <Image
             src={TwitterIcon as string}
             width={30}
@@ -39,6 +42,7 @@ const AboutUs = () => {
           href={"https://www.linkedin.com/in/sundar-paul-dakkumalla-6aa97b1a1/"}
           target="_blank"
         >
+          {/* 🔗 */}
           <Image
             src={LinkdineIcon as string}
             width={30}

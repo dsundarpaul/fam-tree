@@ -2,7 +2,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import { Button } from "~/components/ui/button";
-import { api } from "~/utils/api";
 
 export default function Home() {
   return (
@@ -14,9 +13,17 @@ export default function Home() {
       </Head>
       <main>
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="font-mono text-5xl font-extrabold tracking-tight text-stone-800 sm:text-[5rem]">
-            Family Tree
-          </h1>
+          <div className="text-center">
+            <h1 className="font-mono text-5xl font-extrabold tracking-tight text-stone-800 sm:text-[5rem]">
+              Family Tree🌲
+              <span className="border-2 border-black px-1 text-lg font-normal">
+                Beta
+              </span>
+            </h1>
+            <p className="pt-5 text-lg">
+              Roots Unveiled: Your Family&apos;s Journey Begins Here
+            </p>
+          </div>
 
           <Button
             asChild
