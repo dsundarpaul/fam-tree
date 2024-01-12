@@ -30,6 +30,7 @@ function AddFamily() {
         <FamMemberCard
           MemberData={member}
           MemberType={FamMember.PARENT}
+          hasChildren={data.children.length > 0}
           key={member.id}
         />
       ))}
@@ -80,6 +81,13 @@ function AddFamily() {
       ) : (
         <>
           {renderParents()}
+
+          {data && data?.children?.length > 0 && (
+            <div className="flex w-full flex-col items-center pt-5">
+              <hr className="mb-[15px] h-[1px] w-[30px] rotate-90 border-none bg-black opacity-100" />
+              <hr className="h-[1px] w-full border-none bg-black opacity-100" />
+            </div>
+          )}
           {renderChildren()}
         </>
       )}

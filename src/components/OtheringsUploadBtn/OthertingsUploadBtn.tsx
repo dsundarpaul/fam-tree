@@ -4,15 +4,16 @@ import { Progress } from "../ui/progress";
 import { useState } from "react";
 
 type OtherThingsUploadBtnPropsType = {
-  onUploadCompleteCallback: (url: string | undefined) => void;
+  onUploadCompleteCallback: (
+    url: string | undefined,
+    fileId: string | undefined,
+  ) => void;
   isUploading: (isUploadingState: boolean) => void;
 };
 export default function OtherThingsUploadBtn({
   onUploadCompleteCallback,
   isUploading,
 }: OtherThingsUploadBtnPropsType) {
-  // const { mutate } = api.media.addImageUrl.useMutation();
-
   const [progess, setProgress] = useState(0);
 
   return (
@@ -24,7 +25,7 @@ export default function OtherThingsUploadBtn({
           // console.log("Files: ", res);
           toast.success("Upload Completed");
           isUploading(false);
-          onUploadCompleteCallback(res[0]?.url);
+          onUploadCompleteCallback(res[0]?.url, res[0]?.key);
         }}
         onUploadBegin={() => isUploading(true)}
         onUploadError={(error: Error) => {

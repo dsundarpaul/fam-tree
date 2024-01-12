@@ -28,6 +28,7 @@ model FamMembers {
 
     FM_name      String
     FM_dp        String?
+    FM_dpFilekey String?
     FM_isAlive   Boolean? @default(true)
     FM_dob       String?
     FM_Petname   String?
