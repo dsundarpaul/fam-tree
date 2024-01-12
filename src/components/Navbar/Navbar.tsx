@@ -50,7 +50,7 @@ const Navbar = () => {
         {user.isSignedIn ? (
           <UserButton afterSignOutUrl="/" />
         ) : (
-          <Button>
+          <Button className="max-sm:hidden">
             <SignInButton />
           </Button>
         )}
