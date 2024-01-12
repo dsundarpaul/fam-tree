@@ -4,7 +4,7 @@ export const NAV_CONSTS: SidebarLink[] = [
   {
     label: "Fam to Fam View",
     icon: "/assets/icons/NodeTreeIcon.svg",
-    route: "/fam-to-fam/AAA",
+    route: "/fam-to-fam/famId",
   },
   {
     label: "World View",

@@ -39,12 +39,18 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import OtherThingsUploadBtn from "../OtheringsUploadBtn/OthertingsUploadBtn";
 
+interface UploadedImageURLType {
+  url: string | undefined;
+  fileKey: string | undefined;
+}
 const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
   const [isAddFammemberDialogOpen, setIsAddFamMemberDialogOpen] =
     useState(false);
-  const [uploadedImageURL, setUploadedImageURL] = useState<string | undefined>(
-    undefined,
-  );
+  const [uploadedImageURL, setUploadedImageURL] =
+    useState<UploadedImageURLType>({
+      url: undefined,
+      fileKey: undefined,
+    });
   const [isUploadingStateLoaindg, setIsUploadingStateLoading] = useState(false);
 
   const ctx = api.useContext();
@@ -85,7 +91,8 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       famPetname: values.petname,
       famLoc: values.location,
       famPro: values.profession,
-      famDp: uploadedImageURL,
+      famDp: uploadedImageURL.url,
+      famDpFileKey: uploadedImageURL.fileKey,
     });
   }
 
@@ -225,11 +232,11 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="w-full">
-            {uploadedImageURL ? (
+            {uploadedImageURL.url ? (
               <div>
                 <h2>Image Preview</h2>
                 <Image
-                  src={uploadedImageURL}
+                  src={uploadedImageURL.url}
                   alt="Image Preview"
                   width={200}
                   height={200}
@@ -237,7 +244,9 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
               </div>
             ) : (
               <OtherThingsUploadBtn
-                onUploadCompleteCallback={(url) => setUploadedImageURL(url)}
+                onUploadCompleteCallback={(url, id) =>
+                  setUploadedImageURL({ url: url, fileKey: id })
+                }
                 isUploading={(state) => setIsUploadingStateLoading(state)}
               />
             )}
@@ -279,7 +288,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
         open={isAddFammemberDialogOpen}
         onOpenChange={(open) => {
           setIsAddFamMemberDialogOpen(open);
-          setUploadedImageURL(undefined);
+          setUploadedImageURL({ url: undefined, fileKey: undefined });
         }}
       >
         <DialogTrigger>

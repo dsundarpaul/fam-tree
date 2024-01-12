@@ -3,6 +3,8 @@ import { createTRPCRouter, privateProcedure } from "../trpc";
 import { db } from "~/server/db";
 import { getCalendarDates } from "../helpers/getCalendarDates";
 import { getAddFMbody } from "../helpers/getAddFMbody";
+import { utapi } from "./uploadthing";
+import { TRPCError } from "@trpc/server";
 
 export const famMemberRouter = createTRPCRouter({
   getFamById: privateProcedure
@@ -42,51 +44,59 @@ export const famMemberRouter = createTRPCRouter({
         famLoc: z.string().optional(),
         famPro: z.string().optional(),
         famDp: z.string().optional(),
+        famDpFileKey: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
       const authorId = ctx.userId;
 
-      await db.famMembers.updateMany({
-        where: { FMfamId: input.famId },
-        data: { canDelete: false },
-      });
-
       //TODO: try removing reponse and dirtectly returning
 
       const dataBody = getAddFMbody(input);
+      console.log({ authorId });
+      try {
+        // await db.famMembers.updateMany({
+        //   where: { FMfamId: input.famId },
+        //   data: { canDelete: false },
+        // });
 
-      const reponse = await db.famMembers.create({
-        data: {
-          ...dataBody,
-          authorId: authorId,
-        },
-      });
+        const reponse = await db.famMembers.create({
+          data: {
+            ...dataBody,
+            authorId: authorId,
+          },
+        });
 
-      console.log({ reponse });
+        console.log({ reponse });
 
-      return reponse;
+        return reponse;
+      } catch {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
     }),
 
   deleteFamMember: privateProcedure
     .input(
       z.object({
         memberId: z.string(),
-        memberParentFamId: z.string().nullable(),
+        memberFamId: z.string().nullable(),
+        memberDbFileKey: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const authorId = ctx.userId;
-
       const user = await db.famMembers.delete({
         where: {
           id: input.memberId,
         },
       });
 
+      if (input.memberDbFileKey) {
+        await utapi.deleteFiles(input.memberDbFileKey);
+      }
+
       await db.famMembers.updateMany({
-        where: { FMfamId: input.memberParentFamId },
+        where: { FMfamId: input.memberFamId },
         data: { canDelete: true },
       });
 

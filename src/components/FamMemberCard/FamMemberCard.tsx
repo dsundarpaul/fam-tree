@@ -25,9 +25,15 @@ import toast from "react-hot-toast";
 type FamMemberCardProps = {
   MemberType: FMTypeKeys;
   MemberData: GetFamMemberType;
+  hasChildren?: boolean;
+  id?: string;
 };
 
-const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
+const FamMemberCard = ({
+  MemberData,
+  MemberType,
+  hasChildren,
+}: FamMemberCardProps) => {
   const { FM_name, FM_Petname, FM_dob, FM_Professon } = MemberData;
 
   const [isFammemberCardOpen, setIsFamMemberCardOpen] = useState(false);
@@ -47,10 +53,13 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
   const openMemberModal = () => null;
 
   const handleFamMemberDelete = () => {
-    if (MemberData !== undefined) {
+    if (MemberData) {
       deleteFamMember({
         memberId: MemberData.id,
-        memberParentFamId: MemberData.FMparentId,
+        memberFamId: MemberData.FMfamId,
+        memberDbFileKey: MemberData.FM_dpFilekey
+          ? MemberData.FM_dpFilekey
+          : undefined,
       });
     } else {
       alert("member id undefined");
@@ -118,7 +127,9 @@ const FamMemberCard = ({ MemberData, MemberType }: FamMemberCardProps) => {
 
         <Button
           variant="destructive"
-          disabled={isDeleteFamMemberLoading || !MemberData.canDelete}
+          disabled={
+            isDeleteFamMemberLoading || !MemberData.canDelete || hasChildren
+          }
           onClick={() => handleFamMemberDelete()}
         >
           {isDeleteFamMemberLoading ? (

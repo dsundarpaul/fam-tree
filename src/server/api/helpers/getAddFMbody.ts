@@ -2,7 +2,7 @@ import { type Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-const getAddFMbodyProps = z.object({
+const GetAddFMbodyProps = z.object({
   FMname: z.string(),
   FMType: z.enum(["PARENT", "SPOUSE", "CHILD"]),
   famId: z.string().optional(),
@@ -11,9 +11,12 @@ const getAddFMbodyProps = z.object({
   famLoc: z.string().optional(),
   famPro: z.string().optional(),
   famDp: z.string().optional(),
+  famDpFileKey: z.string().optional(),
 });
 
-export const getAddFMbody = (input: z.infer<typeof getAddFMbodyProps>) => {
+// type GetAddFMbodyProps = RouterInputs["famMember"]["addFamMember"]
+
+export const getAddFMbody = (input: z.infer<typeof GetAddFMbodyProps>) => {
   const dataBody: Omit<Prisma.FamMembersCreateInput, "authorId"> = {
     FM_name: input.FMname,
     FM_dob: input.famDob ? input.famDob : null,
@@ -21,6 +24,7 @@ export const getAddFMbody = (input: z.infer<typeof getAddFMbodyProps>) => {
     FM_loc: input.famLoc ? input.famLoc : null,
     FM_Professon: input.famPro ? input.famPro : null,
     FM_dp: input.famDp ? input.famDp : null,
+    FM_dpFilekey: input.famDpFileKey ? input.famDpFileKey : null,
     // authorId,
   };
 
