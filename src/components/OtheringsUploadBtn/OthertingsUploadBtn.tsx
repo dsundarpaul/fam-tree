@@ -34,9 +34,12 @@ export default function OtherThingsUploadBtn({
           toast.error("Upload Error");
         }}
         config={{ mode: "manual" }}
-        appearance={{ button: "bg-red-200 p-2", container: "bg-green-200" }}
+        appearance={{
+          button: "border-2 border-black p-2 mt-4",
+          container: "",
+        }}
         content={{
-          button: (e) => (e.isUploading ? "Uploading" : "Upload"),
+          button: (e) => (e.isUploading ? "Uploading" : "Click to Upload"),
         }}
         onUploadProgress={(e) => setProgress(e)}
       />
