@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const GetAddFMbodyProps = z.object({
   FMname: z.string(),
-  FMType: z.enum(["PARENT", "SPOUSE", "CHILD"]),
+  FMType: z.enum(["PARENT", "SPOUSE", "CHILD", "SPOUSE_PARENT"]),
   famId: z.string().optional(),
   famDob: z.string().optional(),
   famPetname: z.string().optional(),

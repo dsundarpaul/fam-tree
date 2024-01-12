@@ -7,13 +7,6 @@ export interface SidebarLink {
   label: string;
 }
 
-export type famMemberType = {
-  id: string;
-  FMname: string;
-  ParentId: string | null;
-  FamId: string | null;
-};
-
 export type childType = {
   id: string;
   FMname: string;
