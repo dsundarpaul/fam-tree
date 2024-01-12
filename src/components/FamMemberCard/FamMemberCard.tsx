@@ -60,6 +60,10 @@ const FamMemberCard = ({
         memberDbFileKey: MemberData.FM_dpFilekey
           ? MemberData.FM_dpFilekey
           : undefined,
+        memberType: MemberType,
+        memberParentFamId: MemberData.FMparentId
+          ? MemberData.FMparentId
+          : undefined,
       });
     } else {
       alert("member id undefined");
@@ -127,9 +131,7 @@ const FamMemberCard = ({
 
         <Button
           variant="destructive"
-          disabled={
-            isDeleteFamMemberLoading || !MemberData.canDelete || hasChildren
-          }
+          disabled={isDeleteFamMemberLoading || !MemberData.canDelete}
           onClick={() => handleFamMemberDelete()}
         >
           {isDeleteFamMemberLoading ? (

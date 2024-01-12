@@ -2,6 +2,7 @@ export const FamMember = {
   PARENT: "PARENT",
   SPOUSE: "SPOUSE",
   CHILD: "CHILD",
+  SPOUSE_PARENT: "SPOUSE_PARENT",
 } as const;
 
 export type FMTypeKeys = keyof typeof FamMember;

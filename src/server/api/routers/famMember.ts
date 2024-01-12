@@ -6,6 +6,8 @@ import { getAddFMbody } from "../helpers/getAddFMbody";
 import { utapi } from "./uploadthing";
 import { TRPCError } from "@trpc/server";
 
+const FMTypes = z.enum(["PARENT", "SPOUSE", "CHILD", "SPOUSE_PARENT"]);
+
 export const famMemberRouter = createTRPCRouter({
   getFamById: privateProcedure
     .input(z.string())
@@ -37,7 +39,7 @@ export const famMemberRouter = createTRPCRouter({
     .input(
       z.object({
         FMname: z.string(),
-        FMType: z.enum(["PARENT", "SPOUSE", "CHILD"]),
+        FMType: FMTypes,
         famId: z.string().optional(),
         famDob: z.string().optional(),
         famPetname: z.string().optional(),
@@ -56,10 +58,10 @@ export const famMemberRouter = createTRPCRouter({
       const dataBody = getAddFMbody(input);
       console.log({ authorId });
       try {
-        // await db.famMembers.updateMany({
-        //   where: { FMfamId: input.famId },
-        //   data: { canDelete: false },
-        // });
+        await db.famMembers.updateMany({
+          where: { FMfamId: input.famId },
+          data: { canDelete: false },
+        });
 
         const reponse = await db.famMembers.create({
           data: {
@@ -81,26 +83,39 @@ export const famMemberRouter = createTRPCRouter({
       z.object({
         memberId: z.string(),
         memberFamId: z.string().nullable(),
+        memberParentFamId: z.string().optional(),
         memberDbFileKey: z.string().optional(),
+        memberType: FMTypes,
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await db.famMembers.delete({
-        where: {
-          id: input.memberId,
-        },
-      });
+      try {
+        const user = await db.famMembers.delete({
+          where: {
+            id: input.memberId,
+          },
+        });
 
-      if (input.memberDbFileKey) {
-        await utapi.deleteFiles(input.memberDbFileKey);
+        if (input.memberDbFileKey) {
+          await utapi.deleteFiles(input.memberDbFileKey);
+        }
+
+        await db.famMembers.updateMany({
+          where: { FMfamId: input.memberFamId },
+          data: { canDelete: true },
+        });
+
+        if (input.memberType === "CHILD") {
+          await db.famMembers.updateMany({
+            where: { FMfamId: input.memberParentFamId },
+            data: { canDelete: true },
+          });
+        }
+
+        return user;
+      } catch {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
-
-      await db.famMembers.updateMany({
-        where: { FMfamId: input.memberFamId },
-        data: { canDelete: true },
-      });
-
-      return user;
     }),
 
   getCalendarDates: privateProcedure.input(z.null()).query(async ({ ctx }) => {
