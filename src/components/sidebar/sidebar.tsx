@@ -17,7 +17,7 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
     // <div className={cn("pb-12", className)}>
     <div
       className={cn(
-        "light-border shadow-light-300 max-xl:[266px] sticky left-0 top-0 flex h-screen w-fit  flex-col justify-between overflow-y-auto  border-r dark:shadow-none max-md:hidden md:w-[200px] lg:w-[266px] ",
+        "light-border shadow-light-300 max-xl:[266px] sticky left-0 top-0 flex h-screen w-fit flex-col  justify-between overflow-y-auto border-r  border-r-slate-400 dark:shadow-none max-md:hidden md:w-[200px] lg:w-[266px] ",
         className,
       )}
     >
