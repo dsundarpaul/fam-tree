@@ -5,6 +5,7 @@ import { getCalendarDates } from "../helpers/getCalendarDates";
 import { getAddFMbody } from "../helpers/getAddFMbody";
 import { utapi } from "./uploadthing";
 import { TRPCError } from "@trpc/server";
+import { getTreeNodes } from "../helpers/getTreeNodes";
 
 const FMTypes = z.enum(["PARENT", "SPOUSE", "CHILD", "SPOUSE_PARENT"]);
 
@@ -82,7 +83,7 @@ export const famMemberRouter = createTRPCRouter({
     .input(
       z.object({
         memberId: z.string(),
-        memberFamId: z.string().nullable(),
+        memberFamId: z.string(), // had nullable property, need to test
         memberParentFamId: z.string().optional(),
         memberDbFileKey: z.string().optional(),
         memberType: FMTypes,
@@ -134,5 +135,17 @@ export const famMemberRouter = createTRPCRouter({
     const dates = getCalendarDates(NameByDob);
 
     return dates;
+  }),
+
+  getFullTree: privateProcedure.input(z.null()).query(async ({ ctx }) => {
+    const authorId = ctx.userId;
+
+    const allMembers = await ctx.db.famMembers.findMany({
+      where: { authorId: { equals: authorId } },
+    });
+
+    const { nodes, edges } = getTreeNodes({ records: allMembers });
+
+    return { nodes, edges };
   }),
 });

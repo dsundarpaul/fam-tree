@@ -22,6 +22,11 @@ export const NAV_CONSTS: SidebarLink[] = [
     route: "/calendar/calender-id",
   },
   {
+    label: "Feedback",
+    icon: "/assets/icons/Feedback.svg",
+    route: "/feedback",
+  },
+  {
     label: "Plans",
     icon: "/assets/icons/AwardIcon.svg",
     route: "/plans",

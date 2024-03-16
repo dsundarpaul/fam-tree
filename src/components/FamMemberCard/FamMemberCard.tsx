@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import {
   Dialog,
   DialogContent,
@@ -13,26 +12,27 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import Image from "next/image";
-import ImgTemp from "../../../public/assets/missing-member-pic.png";
-import { Pencil2Icon, ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
+import { ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { api } from "~/utils/api";
 import { type GetFamMemberType } from "~/types";
 import { FILLER_IMAGE, type FMTypeKeys } from "~/constants/consts";
 import FamNavigationButton from "../famNavigationButton/FamNavigationButton";
 import toast from "react-hot-toast";
+import RenderMemberCard from "./RenderMemberCard";
 
 type FamMemberCardProps = {
   MemberType: FMTypeKeys;
   MemberData: GetFamMemberType;
   hasChildren?: boolean;
+  showArrow?: boolean;
   id?: string;
 };
 
 const FamMemberCard = ({
   MemberData,
   MemberType,
-  hasChildren,
+  showArrow = true,
 }: FamMemberCardProps) => {
   const { FM_name, FM_Petname, FM_dob, FM_Professon } = MemberData;
 
@@ -69,26 +69,6 @@ const FamMemberCard = ({
       alert("member id undefined");
     }
   };
-
-  const renderMemberCard = () => (
-    <Card
-      className="pt-4 hover:bg-slate-100 "
-      draggable
-      onClick={() => openMemberModal()}
-    >
-      <CardContent className="flex justify-center">
-        <Image
-          src={MemberData.FM_dp ? MemberData.FM_dp : ImgTemp}
-          width={100}
-          height={100}
-          alt="img"
-        />
-      </CardContent>
-      <CardFooter className="flex justify-center">
-        <CardTitle>{FM_name}</CardTitle>
-      </CardFooter>
-    </Card>
-  );
 
   const renderMemberCartContent = () => (
     <DialogContent>
@@ -147,7 +127,7 @@ const FamMemberCard = ({
 
   return (
     <div>
-      {MemberType === "PARENT" && (
+      {MemberType === "PARENT" && showArrow && (
         <FamNavigationButton
           memberType={MemberType}
           navigateTo={MemberData?.FMparentId}
@@ -158,11 +138,17 @@ const FamMemberCard = ({
         open={isFammemberCardOpen}
         onOpenChange={(open) => setIsFamMemberCardOpen(open)}
       >
-        <DialogTrigger>{renderMemberCard()}</DialogTrigger>
+        <DialogTrigger>
+          <RenderMemberCard
+            FM_dp={MemberData.FM_dp!}
+            FM_name={MemberData.FM_name}
+            openMemberModal={openMemberModal}
+          />
+        </DialogTrigger>
         {renderMemberCartContent()}
       </Dialog>
 
-      {MemberType === "CHILD" && (
+      {MemberType === "CHILD" && showArrow && (
         <FamNavigationButton
           memberType={MemberType}
           navigateTo={MemberData?.FMfamId}
