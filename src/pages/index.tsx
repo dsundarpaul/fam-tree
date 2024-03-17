@@ -33,7 +33,7 @@ export default function Home() {
           <Button
             asChild
             variant={"outline"}
-            className="border-stone-900 hover:bg-slate-400"
+            className="border-stone-900 duration-100 ease-linear hover:scale-110"
           >
             <Link href="/fam-to-fam/famId">Get Started</Link>
           </Button>

@@ -11,7 +11,9 @@
 // }
 
 datasource db {
-    provider     = "mysql"
+    // provider     = "mysql"
+    // provider     = "sqlite"
+    provider     = "postgresql"
     url          = env("DATABASE_URL")
     relationMode = "prisma"
 }
@@ -22,7 +24,7 @@ generator client {
 
 model FamMembers {
     id         String  @id @unique @default(uuid())
-    FMfamId    String? @default(uuid())
+    FMfamId    String  @default(uuid())
     FMparentId String? @default(uuid())
     authorId   String
 

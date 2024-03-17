@@ -76,9 +76,9 @@
 }
 
 .g-st {
-  background: hsla(191, 75%, 60%, 1);
+  /* background: #4cc9e6; */
 
-  background: radial-gradient(
+  /* background: radial-gradient(
     circle,
     hsla(191, 75%, 60%, 1) 0%,
     hsla(0, 0%, 100%, 1) 100%
@@ -96,11 +96,20 @@
     hsla(0, 0%, 100%, 1) 100%
   );
 
-  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#4DC9E6", endColorstr="#FFFFFF", GradientType=1 );
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#4DC9E6", endColorstr="#FFFFFF", GradientType=1 );  */
+
+  background: rgb(76, 201, 230);
+  background: radial-gradient(
+    circle,
+    rgba(76, 201, 230, 1) 0%,
+    rgba(255, 255, 255, 1) 77%
+  );
+
+  opacity: 0.2;
 }
 
 .g-st2 {
-  background: hsla(302, 75%, 60%, 1);
+  /* background: #e64ce0;
 
   background: radial-gradient(
     circle,
@@ -120,5 +129,14 @@
     hsla(0, 0%, 100%, 1) 100%
   );
 
-  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#E64CE0", endColorstr="#FFFFFF", GradientType=1 );
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#E64CE0", endColorstr="#FFFFFF", GradientType=1 );  */
+
+  background: rgb(230, 76, 224);
+  background: radial-gradient(
+    circle,
+    rgba(230, 76, 224, 1) 0%,
+    rgba(255, 255, 255, 1) 77%
+  );
+
+  opacity: 0.2;
 }
