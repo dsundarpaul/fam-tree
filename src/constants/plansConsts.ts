@@ -1,9 +1,12 @@
 export const PLANS_CONSTS = [
   {
-    title: "Free",
+    title: "Leaf",
     cost: "0",
     showCost: false,
     services: [
+      {
+        title: "Get 20 free credits",
+      },
       {
         title: "Can create 1 Family Tree",
       },
@@ -16,10 +19,13 @@ export const PLANS_CONSTS = [
     ],
   },
   {
-    title: "Stardrand",
+    title: "Branch",
     cost: "10",
     showCost: false,
     services: [
+      {
+        title: "50 Credits",
+      },
       {
         title: "Create 3 Family Trees",
       },
@@ -32,10 +38,13 @@ export const PLANS_CONSTS = [
     ],
   },
   {
-    title: "Preimum",
+    title: "Truck",
     cost: "100",
     showCost: false,
     services: [
+      {
+        title: "Unlimited Credits",
+      },
       {
         title: "Create 6 Family Trees",
       },
