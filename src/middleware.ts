@@ -9,9 +9,9 @@ export default authMiddleware({
     "/api/uploadthing",
     "/about-me",
     "/plans",
-    "/server/api/webhook",
+    "/src/server/api/webhook",
   ],
-  ignoredRoutes: ["/server/api/webhook"],
+  ignoredRoutes: ["/src/server/api/webhook"],
 });
 
 export const config = {
