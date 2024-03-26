@@ -6,11 +6,11 @@ import { PLANS_CONSTS } from "~/constants/plansConsts";
 const Plans = () => {
   return (
     <>
-      <div className="flex w-full justify-evenly">
+      <div className="flex w-full flex-wrap justify-evenly">
         {PLANS_CONSTS.map((plan, idx) => (
           <div
             key={idx}
-            className="h-[350px] w-[290px] rounded-md bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] duration-100 ease-in hover:scale-105 hover:invert"
+            className="mt-2 h-[350px] w-[290px] rounded-md bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] duration-100 ease-in hover:scale-105 hover:invert"
           >
             <div className="flex h-full w-full flex-col justify-between rounded-md bg-white p-4 font-sans">
               <div>

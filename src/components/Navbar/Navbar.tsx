@@ -5,9 +5,12 @@ import { Button } from "../ui/button";
 import BlobIcon from "../../../public/blob.svg";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import MobileNav from "./MobileNav";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const user = useUser();
+
+  const pathname = usePathname();
 
   return (
     <nav className="flex items-center justify-between space-x-4 px-5 pt-4 sm:px-10 lg:space-x-6">
@@ -28,23 +31,38 @@ const Navbar = () => {
 
         <Link
           href="/"
-          className="font-medium transition-colors hover:text-primary sm:text-xl "
+          className={`${
+            pathname === "/" ? "text-black " : "text-muted-foreground"
+          } text-sm font-medium transition-colors hover:scale-105 hover:text-primary sm:text-xl`}
         >
           Discover
         </Link>
         <Link
           href="https://github.com/dsundarpaul/fam-tree"
           target="_blank"
-          className="font-medium text-muted-foreground transition-colors hover:text-primary sm:text-xl"
+          className={`text-sm
+          font-medium text-muted-foreground transition-colors hover:scale-105 hover:text-primary sm:text-xl`}
         >
           Open Source
         </Link>
         <Link
           href="/about-me"
-          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary sm:text-xl"
+          className={`${
+            pathname === "/about-me" ? "text-black " : "text-muted-foreground"
+          } text-sm font-medium transition-colors hover:scale-105 hover:text-primary sm:text-xl`}
         >
           About Me
         </Link>
+        {!user.isSignedIn && (
+          <Link
+            href="/plans"
+            className={`${
+              pathname === "/plans" ? "text-black " : "text-muted-foreground"
+            } text-sm font-medium transition-colors hover:scale-105 hover:text-primary sm:text-xl`}
+          >
+            Plans
+          </Link>
+        )}
       </div>
       <div className="flex space-x-2">
         {user.isSignedIn ? (
