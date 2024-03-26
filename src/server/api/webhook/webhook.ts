@@ -18,7 +18,6 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
   }
 
   // GET HEADERS
-  const headerPayload = headers();
   const svix_id = req.headers["svix-id"] as string;
   const svix_timestamp = req.headers["svix-timestamp"] as string;
   const svix_signature = req.headers["svix-signature"] as string;
@@ -58,18 +57,16 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
   console.log({ eventType });
   if (eventType === "user.created") {
-    const { id, first_name } = evt.data;
-
-    const { mutate: createUser } = api.user.createUser.useMutation({
-      onSuccess: () => {
-        toast.success("Accout created sucessfully!");
-      },
-      onError: () => {
-        toast.error("Something went wrong while creating Accout (webhook)");
-      },
-    });
-
-    createUser({ id: id, displayName: first_name });
+    // const { id, first_name } = evt.data;
+    // const { mutate: createUser } = api.user.createUser.useMutation({
+    //   onSuccess: () => {
+    //     toast.success("Accout created sucessfully!");
+    //   },
+    //   onError: () => {
+    //     toast.error("Something went wrong while creating Accout (webhook)");
+    //   },
+    // });
+    // createUser({ id: id, displayName: first_name });
   }
   if (eventType === "user.deleted") {
   }
