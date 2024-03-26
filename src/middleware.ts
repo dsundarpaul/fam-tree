@@ -11,8 +11,9 @@ export default authMiddleware({
     "/plans",
     "/server/api/webhook",
     "/api/webhooks(.*)",
+    "/api/webhook",
   ],
-  ignoredRoutes: ["/server/api/webhook", "/api/webhooks(.*)"],
+  ignoredRoutes: ["/server/api/webhook", "/api/webhooks(.*)", "/api/webhook"],
 });
 
 export const config = {
