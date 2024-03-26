@@ -24,6 +24,7 @@ export async function POST(req: Request) {
   }
 
   // GET BODY
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
