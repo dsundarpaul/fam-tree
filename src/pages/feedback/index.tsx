@@ -1,7 +1,7 @@
 import React from "react";
 
 const index = () => {
-  return <div>Feedback</div>;
+  return <div className="bg-slate-700"></div>;
 };
 
 export default index;

@@ -15,11 +15,27 @@ datasource db {
     // provider     = "sqlite"
     provider     = "postgresql"
     url          = env("DATABASE_URL")
-    relationMode = "prisma"
+    relationMode = "foreignKeys"
 }
 
 generator client {
     provider = "prisma-client-js"
+}
+
+enum Plans {
+    Free
+    Leaf
+    Branch
+    Trunck
+}
+
+model Users {
+    id          String @id @unique @default(uuid())
+    displayName String
+    credits     Int
+    currentPlan String @default("Free")
+
+    feedback Feedback[]
 }
 
 model FamMembers {
@@ -38,4 +54,13 @@ model FamMembers {
     FM_loc       String?
 
     canDelete Boolean? @default(true)
+}
+
+model Feedback {
+    id        String   @id @unique @default(uuid())
+    message   String
+    createdAt DateTime @default(now())
+
+    author   Users  @relation(fields: [authorId], references: [id])
+    authorId String
 }
