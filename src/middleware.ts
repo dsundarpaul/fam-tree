@@ -10,8 +10,9 @@ export default authMiddleware({
     "/about-me",
     "/plans",
     "/server/api/webhook",
+    "/api/webhooks(.*)",
   ],
-  ignoredRoutes: ["/server/api/webhook"],
+  ignoredRoutes: ["/server/api/webhook", "/api/webhooks(.*)"],
 });
 
 export const config = {
