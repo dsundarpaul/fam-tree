@@ -73,7 +73,7 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
     resolver: zodResolver(AddFamMemberformSchema),
     defaultValues: {
       fullName: "",
-      isAlive: "D",
+      isAlive: "A",
       dob: undefined,
       petname: "",
       location: "",
@@ -130,10 +130,10 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
             >
               <FormItem className="flex items-center space-x-3 space-y-0">
                 <FormControl>
-                  <RadioGroupItem value="A" id="alive" />
+                  <RadioGroupItem value="A" id="alive" defaultChecked/>
                 </FormControl>
 
-                <FormLabel className="font-normal">Alive</FormLabel>
+                <FormLabel className="font-normal" >Alive</FormLabel>
               </FormItem>
 
               <FormItem className="flex items-center space-x-3 space-y-0">
@@ -158,11 +158,11 @@ const AddMemberCard = ({ famId, FMType }: AddMemberCardPropsType) => {
       name="dob"
       disabled={isAddFamMemberLoading}
       render={({ field }) => (
-        <FormItem className="flex flex-col">
+        <FormItem className="flex flex-col ">
           {/* <FormItem className="flex items-center space-x-3 space-y-0"> */}
 
-          <FormLabel>Date of birth</FormLabel>
-          <DateOfBirthPicker getDateCallback={field.onChange} />
+          <FormLabel >Date of birth</FormLabel>
+          <DateOfBirthPicker className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" getDateCallback={field.onChange}  />
           {/* </FormItem> */}
 
           <FormDescription>
