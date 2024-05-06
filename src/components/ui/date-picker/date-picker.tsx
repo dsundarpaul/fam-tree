@@ -14,9 +14,10 @@ const DateOfBirthPicker = ({
   className,
   getDateCallback,
 }: DateOfBirthPickerProps) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const currentDate = new Date();
+  const [selectedDate, setSelectedDate] = useState<Date | null>(currentDate);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  const years: number[] = range(1800, new Date().getFullYear());
+  const years: number[] = range(1800, new Date().getFullYear() + 1);
 
   const months = [
     "January",
@@ -33,11 +34,26 @@ const DateOfBirthPicker = ({
     "December",
   ];
 
+
+  const handlePrevYear = () => {
+    const newDate = new Date(selectedDate || currentDate);
+    newDate.setFullYear(newDate.getFullYear() - 1);
+    setSelectedDate(newDate);
+  };
+
+  const handleNextYear = () => {
+    const newDate = new Date(selectedDate || currentDate);
+    newDate.setFullYear(newDate.getFullYear() + 1);
+    setSelectedDate(newDate);
+  };
+
+
   return (
     <div>
+     
       <DatePicker
         showIcon
-        selected={selectedDate}
+        selected={selectedDate || currentDate}
         onChange={(date) => {
           setSelectedDate(date);
           getDateCallback(date);
@@ -81,7 +97,7 @@ const DateOfBirthPicker = ({
             </select>
 
             <select
-              // value={months[getMonth(date)]}
+              value={months[date.getMonth()]}
               onChange={({ target: { value } }) =>
                 changeMonth(months.indexOf(value))
               }

@@ -28,7 +28,7 @@ const RenderMemberCard = ({
         />
       </CardContent>
       <CardFooter className="flex justify-center">
-        <CardTitle>{FM_name}</CardTitle>
+        <CardTitle>{FM_name.length > 14 ? FM_name.slice(0, 14) + '...' : FM_name}</CardTitle>
       </CardFooter>
     </Card>
   );

@@ -12,7 +12,8 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import Image from "next/image";
-import { ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
+import { Pencil1Icon, ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
+// import { Pencil } from 'lucide-react';
 import { Button } from "../ui/button";
 import { api } from "~/utils/api";
 import { type GetFamMemberType } from "~/types";
@@ -104,10 +105,10 @@ const FamMemberCard = ({
         </div>
       </DialogHeader>
       <DialogFooter>
-        {/* <Button disabled={isDeleteFamMemberLoading}>
-          <Pencil2Icon className="mr-2" />
+        <Button disabled={isDeleteFamMemberLoading}>
+          <Pencil1Icon className="mr-2" />
           Edit
-        </Button> */}
+        </Button>
 
         <Button
           variant="destructive"
