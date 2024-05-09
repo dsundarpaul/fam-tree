@@ -25,7 +25,7 @@ function AddFamily() {
   console.log({ data });
 
   const renderParents = () => (
-    <div className="flex w-full items-center justify-evenly">
+    <div className="red flex w-full items-center justify-evenly">
       {data?.parents.map((member) => (
         <FamMemberCard
           MemberData={member}
